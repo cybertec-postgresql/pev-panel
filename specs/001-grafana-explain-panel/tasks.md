@@ -15,14 +15,14 @@
 
 **Purpose**: Bootstrap Grafana panel plugin with official tooling and configure build system inside Docker
 
-- [ ] T001 Bootstrap plugin using @grafana/create-plugin or verify existing plugin.json and package.json structure
-- [ ] T002 Install dependencies: npm install (includes @grafana/data, @grafana/ui, @grafana/runtime, React 18.x, TypeScript 5.x)
-- [ ] T003 [P] Install Vue 3 runtime and PEV2 library: npm install vue@^3.4.0 pev2@latest
-- [ ] T004 [P] Install development dependencies: npm install --save-dev @types/node vue-loader@^17.4.0 @vue/compiler-sfc@^3.4.0
-- [ ] T005 Configure webpack for Vue bundling in .config/webpack/webpack.config.ts (add Vue loader, resolve alias, DefinePlugin for Vue feature flags)
-- [ ] T006 Update plugin.json metadata (name: "Postgres Explain Visualizer", id: "cybertec-pev-panel", type: "panel")
-- [ ] T007 [P] Create directory structure: src/components/, src/services/, src/types/, src/utils/, src/styles/
-- [ ] T008 Verify build process: npm run build produces dist/module.js with bundled Vue and PEV2
+- [x] T001 Bootstrap plugin using @grafana/create-plugin or verify existing plugin.json and package.json structure
+- [x] T002 Install dependencies: npm install (includes @grafana/data, @grafana/ui, @grafana/runtime, React 18.x, TypeScript 5.x)
+- [x] T003 [P] Install Vue 3 runtime and PEV2 library: npm install vue@^3.4.0 pev2@latest
+- [x] T004 [P] Install development dependencies: npm install --save-dev @types/node vue-loader@^17.4.0 @vue/compiler-sfc@^3.4.0
+- [x] T005 Configure webpack for Vue bundling in .config/webpack/webpack.config.ts (add Vue loader, resolve alias, DefinePlugin for Vue feature flags)
+- [x] T006 Update plugin.json metadata (name: "Postgres Explain Visualizer", id: "cybertec-pev-panel", type: "panel")
+- [x] T007 [P] Create directory structure: src/components/, src/services/, src/types/, src/utils/, src/styles/
+- [x] T008 Verify build process: npm run build produces dist/module.js with bundled Vue and PEV2
 
 **Checkpoint**: Project structure initialized, dependencies installed, webpack configured, build successful
 
@@ -34,15 +34,15 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T009 [P] Create src/types/plan-types.ts with ExecutionPlan, PlanNode, NodeType, JoinType, ParentRelationship interfaces (copy from contracts/plan-types.ts)
-- [ ] T010 [P] Create src/types/panel-options.ts with PanelOptions interface and DEFAULT_PANEL_OPTIONS (copy from contracts/panel-options.ts)
-- [ ] T011 [P] Create src/types/error-types.ts with ErrorType enum, ErrorState interface, PlanError class (copy from contracts/error-types.ts)
-- [ ] T012 [P] Create src/utils/constants.ts with default field names, font size ranges, performance thresholds
-- [ ] T013 [P] Create src/utils/logger.ts with console logging utilities (error, warn, info methods with context)
-- [ ] T014 [P] Create src/components/ErrorBoundary.tsx (React Error Boundary component with componentDidCatch)
-- [ ] T015 [P] Create src/components/ErrorDisplay.tsx (displays ErrorState using @grafana/ui Alert component)
-- [ ] T016 [P] Create src/components/LoadingSpinner.tsx (loading state component using @grafana/ui LoadingPlaceholder)
-- [ ] T017 Update src/module.ts to register panel plugin with PanelPlugin constructor
+- [x] T009 [P] Create src/types/plan-types.ts with ExecutionPlan, PlanNode, NodeType, JoinType, ParentRelationship interfaces (copy from contracts/plan-types.ts)
+- [x] T010 [P] Create src/types/panel-options.ts with PanelOptions interface and DEFAULT_PANEL_OPTIONS (copy from contracts/panel-options.ts)
+- [x] T011 [P] Create src/types/error-types.ts with ErrorType enum, ErrorState interface, PlanError class (copy from contracts/error-types.ts)
+- [x] T012 [P] Create src/utils/constants.ts with default field names, font size ranges, performance thresholds
+- [x] T013 [P] Create src/utils/logger.ts with console logging utilities (error, warn, info methods with context)
+- [x] T014 [P] Create src/components/ErrorBoundary.tsx (React Error Boundary component with componentDidCatch)
+- [x] T015 [P] Create src/components/ErrorDisplay.tsx (displays ErrorState using @grafana/ui Alert component)
+- [x] T016 [P] Create src/components/LoadingSpinner.tsx (loading state component using @grafana/ui LoadingPlaceholder)
+- [x] T017 Update src/module.ts to register panel plugin with PanelPlugin constructor
 
 **Checkpoint**: Foundation ready - all types defined, error handling infrastructure in place, user story implementation can now begin in parallel
 
@@ -56,20 +56,20 @@
 
 ### Implementation for User Story 1
 
-- [ ] T018 [P] [US1] Create src/services/dataExtractor.ts (extract plan string from Grafana DataFrame by field name)
-- [ ] T019 [P] [US1] Create src/services/planValidator.ts (validate JSON structure matches ExecutionPlan interface using isValidExecutionPlan)
-- [ ] T020 [US1] Create src/services/vueBootstrap.ts (mountVueApp and unmountVueApp functions using Vue createApp)
-- [ ] T021 [US1] Create src/components/VueMount.tsx (React component managing Vue app lifecycle with useRef and useEffect)
-- [ ] T022 [US1] Integrate PEV2 Plan component in src/components/VueMount.tsx (import pev2 library, create Vue app with Plan component)
-- [ ] T023 [US1] Import PEV2 styles in src/components/VueMount.tsx (import 'pev2/dist/style.css')
-- [ ] T024 [US1] Create src/components/ExplainPanel.tsx (main panel component receiving PanelProps, managing data extraction and Vue mounting)
-- [ ] T025 [US1] Wire dataExtractor in ExplainPanel.tsx (call extractPlanData with data and options.planFieldName)
-- [ ] T026 [US1] Wire planValidator in ExplainPanel.tsx (validate extracted JSON before passing to Vue)
-- [ ] T027 [US1] Wire VueMount component in ExplainPanel.tsx (render VueMount with plan data when valid)
-- [ ] T028 [US1] Add error handling in ExplainPanel.tsx (try-catch blocks, render ErrorDisplay on failures)
-- [ ] T029 [US1] Wrap VueMount in ErrorBoundary in ExplainPanel.tsx
-- [ ] T030 [US1] Add loading state handling in ExplainPanel.tsx (display LoadingSpinner while processing)
-- [ ] T031 [US1] Update src/module.ts to export ExplainPanel as default panel component
+- [x] T018 [P] [US1] Create src/services/dataExtractor.ts (extract plan string from Grafana DataFrame by field name)
+- [x] T019 [P] [US1] Create src/services/planValidator.ts (validate JSON structure matches ExecutionPlan interface using isValidExecutionPlan)
+- [x] T020 [US1] Create src/services/vueBootstrap.ts (mountVueApp and unmountVueApp functions using Vue createApp)
+- [x] T021 [US1] Create src/components/VueMount.tsx (React component managing Vue app lifecycle with useRef and useEffect)
+- [x] T022 [US1] Integrate PEV2 Plan component in src/components/VueMount.tsx (import pev2 library, create Vue app with Plan component)
+- [x] T023 [US1] Import PEV2 styles in src/components/VueMount.tsx (import 'pev2/dist/style.css')
+- [x] T024 [US1] Create src/components/ExplainPanel.tsx (main panel component receiving PanelProps, managing data extraction and Vue mounting)
+- [x] T025 [US1] Wire dataExtractor in ExplainPanel.tsx (call extractPlanData with data and options.planFieldName)
+- [x] T026 [US1] Wire planValidator in ExplainPanel.tsx (validate extracted JSON before passing to Vue)
+- [x] T027 [US1] Wire VueMount component in ExplainPanel.tsx (render VueMount with plan data when valid)
+- [x] T028 [US1] Add error handling in ExplainPanel.tsx (try-catch blocks, render ErrorDisplay on failures)
+- [x] T029 [US1] Wrap VueMount in ErrorBoundary in ExplainPanel.tsx
+- [x] T030 [US1] Add loading state handling in ExplainPanel.tsx (display LoadingSpinner while processing)
+- [x] T031 [US1] Update src/module.ts to export ExplainPanel as default panel component
 
 **Checkpoint**: User Story 1 complete - JSON EXPLAIN output renders as PEV2 visualization with full interactivity
 
@@ -85,13 +85,13 @@
 
 ### Implementation for User Story 4
 
-- [ ] T032 [US4] Enhance src/services/dataExtractor.ts to handle empty data (return null if data.series is empty)
-- [ ] T033 [US4] Enhance src/services/dataExtractor.ts to handle field not found (throw PlanError with FIELD_NOT_FOUND and available field names)
-- [ ] T034 [US4] Enhance src/services/dataExtractor.ts to handle multiple rows (log warning, use first row)
-- [ ] T035 [US4] Enhance src/services/dataExtractor.ts to handle both string and object field values (stringify objects, pass strings directly)
-- [ ] T036 [US4] Add comprehensive error messages in dataExtractor.ts with available field names for debugging
-- [ ] T037 [US4] Update ExplainPanel.tsx to handle NO_DATA error gracefully (display info message, not error)
-- [ ] T038 [US4] Update ExplainPanel.tsx to handle FIELD_NOT_FOUND error with resolution hint showing available fields
+- [x] T032 [US4] Enhance src/services/dataExtractor.ts to handle empty data (return null if data.series is empty)
+- [x] T033 [US4] Enhance src/services/dataExtractor.ts to handle field not found (throw PlanError with FIELD_NOT_FOUND and available field names)
+- [x] T034 [US4] Enhance src/services/dataExtractor.ts to handle multiple rows (log warning, use first row)
+- [x] T035 [US4] Enhance src/services/dataExtractor.ts to handle both string and object field values (stringify objects, pass strings directly)
+- [x] T036 [US4] Add comprehensive error messages in dataExtractor.ts with available field names for debugging
+- [x] T037 [US4] Update ExplainPanel.tsx to handle NO_DATA error gracefully (display info message, not error)
+- [x] T038 [US4] Update ExplainPanel.tsx to handle FIELD_NOT_FOUND error with resolution hint showing available fields
 
 **Checkpoint**: Plugin works with any data source - field extraction is robust and provides helpful error messages
 
@@ -133,19 +133,19 @@
 
 ### Implementation for User Story 3
 
-- [ ] T050 [US3] Add panel options builder in src/module.ts using setPanelOptions method
-- [ ] T051 [US3] Add planFieldName text input to options builder (name: "Plan Field Name", default: "plan")
-- [ ] T052 [US3] Add forceJsonMode boolean switch to options builder (name: "Force JSON Mode", default: false)
-- [ ] T053 [US3] Add fontSize slider to options builder (name: "Font Size", range: 10-24, step: 1, default: 14)
-- [ ] T054 [US3] Add darkMode boolean switch to options builder (name: "Dark Mode", default: false)
-- [ ] T055 [US3] Pass fontSize option to VueMount.tsx component props
-- [ ] T056 [US3] Pass darkMode option to VueMount.tsx component props
-- [ ] T057 [US3] Apply fontSize to PEV2 component in VueMount.tsx (via Vue props or CSS variable)
-- [ ] T058 [US3] Apply darkMode to PEV2 component in VueMount.tsx (via Vue props or CSS class)
+- [x] T050 [US3] Add panel options builder in src/module.ts using setPanelOptions method
+- [x] T051 [US3] Add planFieldName text input to options builder (name: "Plan Field Name", default: "plan")
+- [x] T052 [US3] Add forceJsonMode boolean switch to options builder (name: "Force JSON Mode", default: false)
+- [x] T053 [US3] Add fontSize slider to options builder (name: "Font Size", range: 10-24, step: 1, default: 14)
+- [x] T054 [US3] Add darkMode boolean switch to options builder (name: "Dark Mode", default: false)
+- [x] T055 [US3] Pass fontSize option to VueMount.tsx component props
+- [x] T056 [US3] Pass darkMode option to VueMount.tsx component props
+- [x] T057 [US3] Apply fontSize to PEV2 component in VueMount.tsx (via Vue props or CSS variable)
+- [x] T058 [US3] Apply darkMode to PEV2 component in VueMount.tsx (via Vue props or CSS class)
 - [ ] T059 [US3] Create src/styles/pev2-overrides.css for theme-aware PEV2 styling
 - [ ] T060 [US3] Import pev2-overrides.css in VueMount.tsx
 - [ ] T061 [US3] Use Grafana theme variables in pev2-overrides.css (--grafana-font-family, --grafana-text-primary)
-- [ ] T062 [US3] Verify options persist when dashboard is saved and reloaded
+- [x] T062 [US3] Verify options persist when dashboard is saved and reloaded
 
 **Checkpoint**: Panel options work - users can customize appearance and changes apply immediately
 
@@ -178,9 +178,9 @@
 
 **Purpose**: Finalize plugin with documentation, testing, and production readiness
 
-- [ ] T071 [P] Update README.md with plugin description, installation, configuration, usage examples
-- [ ] T072 [P] Update README.md with sample PostgreSQL queries (JSON and text EXPLAIN formats)
-- [ ] T073 [P] Create CHANGELOG.md with initial version entry
+- [x] T071 [P] Update README.md with plugin description, installation, configuration, usage examples
+- [x] T072 [P] Update README.md with sample PostgreSQL queries (JSON and text EXPLAIN formats)
+- [x] T073 [P] Create CHANGELOG.md with initial version entry
 - [ ] T074 [P] Add plugin logo to src/img/logo.svg
 - [ ] T075 [P] Add plugin screenshots to src/img/ directory
 - [ ] T076 [P] Create provisioning/dashboards/explain-example.json with sample dashboard
@@ -194,7 +194,7 @@
 - [ ] T084 Verify CSP compliance (test in Grafana Cloud or with strict CSP settings)
 - [ ] T085 Run linter: npm run lint and fix any issues
 - [ ] T086 Run formatter: npm run format
-- [ ] T087 Build production bundle: npm run build
+- [x] T087 Build production bundle: npm run build
 - [ ] T088 Generate plugin signing manifest if needed: npm run sign
 - [ ] T089 Create distribution package: zip -r dist.zip dist/ or npm run package
 
@@ -229,6 +229,7 @@ Foundation (Phase 2) ──┬──> User Story 1 (Phase 3) ──┬──> Us
 ### Recommended Implementation Order
 
 **MVP First** (User Story 1 only):
+
 1. Complete Phase 1: Setup (T001-T008)
 2. Complete Phase 2: Foundational (T009-T017) ⚠️ CRITICAL BLOCKER
 3. Complete Phase 3: User Story 1 (T018-T031)
@@ -236,6 +237,7 @@ Foundation (Phase 2) ──┬──> User Story 1 (Phase 3) ──┬──> Us
 5. Deploy/demo if ready
 
 **Full Feature Delivery**:
+
 1. Complete Setup + Foundational (T001-T017)
 2. Complete User Story 1 (T018-T031) → MVP ready
 3. Complete User Story 4 (T032-T038) → Data source flexibility
@@ -303,31 +305,37 @@ Task T019: "Create src/services/planValidator.ts"
 ### Incremental Delivery (Recommended for Team)
 
 **Iteration 1 - MVP** (User Story 1):
+
 - Setup + Foundational + US1
 - Deliverable: JSON visualization working
 - Demo: Show PEV2 rendering PostgreSQL plans
 
 **Iteration 2** (User Story 4):
+
 - Add data source flexibility
 - Deliverable: Works with any Grafana data source
 - Demo: PostgreSQL, JSON API, TestData all work
 
 **Iteration 3** (User Story 2):
+
 - Add text format auto-conversion
 - Deliverable: No format restrictions
 - Demo: Plain EXPLAIN queries work seamlessly
 
 **Iteration 4** (User Story 3):
+
 - Add customization options
 - Deliverable: User-configurable appearance
 - Demo: Dark mode, font size, field name options
 
 **Iteration 5** (User Story 5):
+
 - Add responsive design
 - Deliverable: Professional panel behavior
 - Demo: Resize window, panel scales smoothly
 
 **Iteration 6** (Polish):
+
 - Documentation and distribution
 - Deliverable: Production-ready plugin
 - Demo: Install from zip, works in Grafana Cloud
@@ -367,6 +375,7 @@ All stories integrate independently without conflicts.
 ## Format Validation ✅
 
 All tasks follow the required checklist format:
+
 - ✅ Checkbox: `- [ ]` prefix on all tasks
 - ✅ Task ID: Sequential T001-T089
 - ✅ [P] marker: Present on parallelizable tasks only

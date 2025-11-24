@@ -1,7 +1,1 @@
-type SeriesSize = 'sm' | 'md' | 'lg';
-
-export interface SimpleOptions {
-  text: string;
-  showSeriesCount: boolean;
-  seriesCountSize: SeriesSize;
-}
+export { PanelOptions, DEFAULT_PANEL_OPTIONS } from "./types/panel-options";

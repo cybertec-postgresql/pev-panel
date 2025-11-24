@@ -1,11 +1,19 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
-  "name": "Pev",
+  "name": "Postgres Explain Visualizer",
   "id": "cybertec-pev-panel",
   "info": {
-    "keywords": ["panel"],
-    "description": "",
+    "keywords": [
+      "panel",
+      "postgres",
+      "postgresql",
+      "explain",
+      "query",
+      "performance",
+      "visualization"
+    ],
+    "description": "Visualize PostgreSQL EXPLAIN output as an interactive tree diagram using PEV2",
     "author": {
       "name": "Cybertec"
     },

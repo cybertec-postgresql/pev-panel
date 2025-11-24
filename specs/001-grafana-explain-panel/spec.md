@@ -16,7 +16,7 @@ Database administrators, performance engineers, and developers need to analyze P
 
 The solution must work in restricted Grafana environments (Grafana Cloud, enterprise installations) where external resources are blocked by Content Security Policy (CSP).
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Visualize JSON EXPLAIN Output (Priority: P1)
 
@@ -104,32 +104,24 @@ A dashboard viewer adjusts browser window size or switches between desktop and m
 
 - What happens when EXPLAIN output contains no data (empty plan)?
   - Display clear message: "No execution plan data available"
-  
 - What happens when data source returns malformed JSON?
   - Display error message with validation details and suggest checking query format
-  
 - What happens when plain text EXPLAIN parser fails?
   - Fall back to raw text display with error banner: "Unable to parse plan format"
-  
 - What happens when data source field name doesn't match planFieldName option?
   - Display configuration error: "Field '[fieldName]' not found. Check planFieldName setting."
-  
 - What happens when panel receives multiple rows of data?
   - Use first row by default, log warning if multiple rows detected
-  
 - What happens when EXPLAIN output is extremely large (>10,000 nodes)?
   - Render with performance warning, suggest filtering query scope
-  
 - What happens when user switches data sources while viewing a visualization?
   - Clear previous visualization, show loading state, render new data
-  
 - What happens when CSP blocks Vue component loading?
   - Display error: "Plugin assets failed to load. Check CSP configuration."
-  
 - What happens when PEV2 library throws runtime error?
   - Catch error, display: "Visualization error: [error message]", log to browser console
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -246,7 +238,7 @@ A dashboard viewer adjusts browser window size or switches between desktop and m
 
 - **Visualization State**: Current state of rendered plan. Contains expanded/collapsed node IDs, selected node, zoom level, scroll position.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 
@@ -268,6 +260,7 @@ A dashboard viewer adjusts browser window size or switches between desktop and m
 The plugin follows Grafana's standard panel plugin architecture with special handling for Vue component integration:
 
 **Grafana Panel Layer** (React + TypeScript)
+
 - Panel component receives data frames from Grafana
 - Extracts plan data from configured field
 - Detects and converts format as needed
@@ -275,18 +268,21 @@ The plugin follows Grafana's standard panel plugin architecture with special han
 - Creates Vue mounting point (div container)
 
 **Vue Integration Layer**
+
 - Mounts Vue 3 application inside React-managed div
 - Passes plan data as props to Vue components
 - Handles Vue lifecycle (mount, update, unmount)
 - Bridges React state changes to Vue reactivity
 
 **PEV2 Visualization Layer** (Vue 3)
+
 - Receives parsed JSON plan data
 - Renders interactive tree visualization
 - Handles user interactions (hover, click, expand)
 - Applies styling based on panel options
 
 **Data Flow**
+
 1. Grafana data source → Panel component receives DataFrame
 2. Panel extracts field value using planFieldName
 3. Format detector analyzes input (JSON vs text)
@@ -302,22 +298,26 @@ The plugin follows Grafana's standard panel plugin architecture with special han
 All dependencies must be bundled locally to satisfy CSP requirements:
 
 **React Bundle** (Grafana provides)
+
 - React runtime (provided by Grafana)
 - TypeScript definitions
 - Grafana UI components
 
 **Vue Bundle** (plugin must bundle)
+
 - Vue 3 runtime (runtime-only build)
 - Vue reactivity system
 - Vue compiler (if needed for templates)
 
 **PEV2 Bundle** (plugin must bundle)
+
 - PEV2 Vue components
 - PEV2 parser utilities
 - PEV2 styles (inlined CSS)
 - PEV2 assets (icons, fonts)
 
 **Build Output Structure**
+
 ```
 dist/
   module.js          (Panel React component + bundled dependencies)
@@ -331,12 +331,14 @@ dist/
 ### Security Constraints
 
 **Content Security Policy Compliance**
+
 - No `script-src` external domains
 - No `style-src` external domains
 - No `connect-src` to CDNs
 - All assets served from plugin directory
 
 **Bundle Requirements**
+
 - Vue 3 runtime must be inlined
 - PEV2 library must be inlined
 - All CSS must be inlined or bundled
@@ -345,6 +347,7 @@ dist/
 ### Panel Lifecycle
 
 **Initialization**
+
 1. Panel component mounts
 2. Create Vue app container (div ref)
 3. Load Vue runtime from bundle
@@ -352,6 +355,7 @@ dist/
 5. Mount Vue app to container div
 
 **Data Update**
+
 1. Grafana calls onOptionsChange or data prop updates
 2. Extract plan data from new DataFrame
 3. Detect/convert format if needed
@@ -359,12 +363,14 @@ dist/
 5. PEV2 re-renders with new data
 
 **Resize**
+
 1. Grafana calls onResize with new dimensions
 2. Update container div dimensions
 3. Trigger Vue reactive resize
 4. PEV2 recalculates layout
 
 **Cleanup**
+
 1. Panel component unmounts
 2. Unmount Vue app
 3. Destroy Vue instance
@@ -373,31 +379,37 @@ dist/
 ### Error States
 
 **State 1: No Data**
+
 - Trigger: DataFrame is empty or undefined
 - Display: "No data available. Configure a query to return EXPLAIN output."
 - Action: User should configure panel query
 
 **State 2: Field Not Found**
+
 - Trigger: Specified planFieldName doesn't exist in DataFrame
 - Display: "Field '[name]' not found. Available fields: [list]. Update planFieldName in panel options."
 - Action: User should correct field name setting
 
 **State 3: Invalid Format**
+
 - Trigger: Data is neither valid JSON nor parseable text
 - Display: "Invalid EXPLAIN format. Expected JSON or plain text EXPLAIN output."
 - Action: User should verify query returns EXPLAIN data
 
 **State 4: Parse Error**
+
 - Trigger: Text-to-JSON conversion fails
 - Display: "Unable to parse EXPLAIN text format: [error]. Try EXPLAIN (FORMAT JSON) or enable forceJsonMode."
 - Action: User should modify query or settings
 
 **State 5: Render Error**
+
 - Trigger: PEV2 component throws exception
 - Display: "Visualization error: [message]. Check browser console for details."
 - Action: User should report issue with query plan sample
 
 **State 6: CSP Violation**
+
 - Trigger: Browser blocks resource load
 - Display: "Plugin assets blocked by security policy. Contact Grafana administrator."
 - Action: Admin should verify plugin installation
@@ -430,12 +442,14 @@ The following are explicitly excluded from this specification:
 ## Dependencies & Constraints
 
 ### External Dependencies
+
 - Grafana platform (version 9.0+)
 - PEV2 visualization library (bundled)
 - Vue 3 framework (bundled)
 - PostgreSQL data source (or compatible alternative)
 
 ### Technical Constraints
+
 - Must run entirely in browser (no backend server)
 - Must comply with strict CSP policies
 - Bundle size should not exceed 2MB
@@ -443,6 +457,7 @@ The following are explicitly excluded from this specification:
 - Must use Grafana SDK APIs for panel integration
 
 ### Assumptions
+
 - Grafana plugin signing infrastructure is available for distribution
 - Development environment has Node.js 18+ and npm/yarn
 - Build process has access to npm registry for development dependencies

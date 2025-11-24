@@ -244,7 +244,7 @@ export type NodeType =
   | "Result" // Constant result or expression evaluation
   | "ProjectSet" // Project set-returning functions
   | "ModifyTable" // INSERT, UPDATE, DELETE
-  | "Memoize"; // Memoize subplan results (PostgreSQL 14+);
+  | "Memoize"; // Memoize subplan results (PostgreSQL 14+)
 
 /**
  * Relationship of a node to its parent in the plan tree

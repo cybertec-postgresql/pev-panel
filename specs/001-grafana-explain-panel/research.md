@@ -11,9 +11,11 @@ This document consolidates research findings for all technical unknowns identifi
 ## Decision 0.1: Vue 3 + React Integration Strategy
 
 ### Decision
+
 Use React `useRef` + `useEffect` to manually mount Vue 3 apps into DOM nodes managed by React. The React component owns the container element lifecycle, while Vue manages the content within that container.
 
 ### Rationale
+
 - **Separation of Concerns**: React handles Grafana panel integration (props, lifecycle, options), Vue handles visualization rendering
 - **Clean Lifecycle**: React's `useEffect` cleanup function naturally maps to Vue's `app.unmount()`
 - **Proven Pattern**: This approach is used successfully in other React-Vue hybrid applications
@@ -22,14 +24,17 @@ Use React `useRef` + `useEffect` to manually mount Vue 3 apps into DOM nodes man
 ### Alternatives Considered
 
 **1. vue-react-wrapper Library**
+
 - **Rejected**: Adds external dependency, potential CSP issues, less control over lifecycle
 - **Why Not**: Unnecessary abstraction for our simple use case
 
 **2. Web Components Bridge**
+
 - **Rejected**: Requires compiling Vue to Web Components, increases bundle size, browser compatibility concerns
 - **Why Not**: Over-engineered for single component integration
 
 **3. iframe Isolation**
+
 - **Rejected**: Security concerns, communication overhead, styling isolation issues
 - **Why Not**: Violates principle I (Security First) and adds unnecessary complexity
 
@@ -57,7 +62,7 @@ export function unmountVueApp(app: VueApp): void {
 const VueContainer: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<VueApp | null>(null);
-  
+
   useEffect(() => {
     if (containerRef.current) {
       appRef.current = mountVueApp(containerRef.current, PevComponent, props);
@@ -68,12 +73,13 @@ const VueContainer: React.FC = () => {
       }
     };
   }, []);
-  
+
   return <div ref={containerRef} />;
 };
 ```
 
 **Key Points**:
+
 - Use `useRef` for both container element and Vue app instance
 - Mount in `useEffect` with empty dependency array
 - Unmount in cleanup function
@@ -84,9 +90,11 @@ const VueContainer: React.FC = () => {
 ## Decision 0.2: PEV2 Library Integration
 
 ### Decision
+
 Use PEV2's modular exports to import only required components and utilities. Bundle the complete PEV2 library including parser and visualization components.
 
 ### Rationale
+
 - **Official Support**: PEV2 is designed as a library, not just a standalone app
 - **Complete Functionality**: Need both parser (text → JSON) and visualization (JSON → UI)
 - **Bundle Control**: Can tree-shake unused parts if needed
@@ -95,57 +103,65 @@ Use PEV2's modular exports to import only required components and utilities. Bun
 ### Alternatives Considered
 
 **1. Fork PEV2 and Modify**
+
 - **Rejected**: Creates maintenance burden, loses upstream updates
 - **Why Not**: PEV2 API is sufficient as-is
 
 **2. Reimplement Visualization**
+
 - **Rejected**: Extremely complex (1000+ lines of D3/SVG logic), high risk
 - **Why Not**: Violates "don't reinvent the wheel" principle
 
 **3. Use PEV2 as iframe/embed**
+
 - **Rejected**: CSP violations, communication complexity
 - **Why Not**: Violates principle III (Bundled Dependencies)
 
 ### Implementation Guide
 
 **PEV2 Package Structure**:
+
 ```typescript
 // From pev2 npm package
-import { Plan } from 'pev2';                // Vue component
-import { parsePlan } from 'pev2/parser';    // Text parser
-import 'pev2/dist/style.css';               // Styles
+import { Plan } from "pev2"; // Vue component
+import { parsePlan } from "pev2/parser"; // Text parser
+import "pev2/dist/style.css"; // Styles
 ```
 
 **Required Exports**:
+
 - `Plan` component (Vue 3 component)
 - `parsePlan` function (text → JSON converter)
 - CSS styles (bundled separately)
 
 **Props Interface**:
+
 ```typescript
 interface PlanProps {
-  planSource: string;        // JSON string or text
-  query?: string;            // Optional SQL query
-  planStats?: PlanStats;     // Optional statistics
+  planSource: string; // JSON string or text
+  query?: string; // Optional SQL query
+  planStats?: PlanStats; // Optional statistics
 }
 ```
 
 **Integration Pattern**:
+
 ```typescript
-import { createApp } from 'vue';
-import { Plan } from 'pev2';
-import 'pev2/dist/style.css';
+import { createApp } from "vue";
+import { Plan } from "pev2";
+import "pev2/dist/style.css";
 
 const app = createApp({
   components: { Plan },
   template: '<Plan :planSource="planJson" />',
   data() {
     return { planJson: jsonString };
-  }
+  },
 });
 ```
 
 **Key Points**:
+
 - Import component, not full app
 - CSS must be imported separately (handled by webpack)
 - Plan component accepts JSON string, not parsed object
@@ -156,9 +172,11 @@ const app = createApp({
 ## Decision 0.3: Webpack Bundling for Vue + PEV2
 
 ### Decision
+
 Extend Grafana's webpack configuration to add Vue loader and configure PEV2 bundling with all assets included inline.
 
 ### Rationale
+
 - **CSP Compliance**: All assets bundled = no external loads
 - **Grafana Compatibility**: Extends existing config rather than replacing
 - **Performance**: Single bundle reduces HTTP requests
@@ -167,14 +185,17 @@ Extend Grafana's webpack configuration to add Vue loader and configure PEV2 bund
 ### Alternatives Considered
 
 **1. Separate Vue Bundle + Dynamic Import**
+
 - **Rejected**: Dynamic imports may trigger CSP, adds loading complexity
 - **Why Not**: Violates principle III (Bundled Dependencies)
 
 **2. Vite Build**
+
 - **Rejected**: Grafana uses webpack, mixing build tools creates complexity
 - **Why Not**: Non-standard for Grafana plugins
 
 **3. Vue CLI**
+
 - **Rejected**: Not compatible with Grafana plugin structure
 - **Why Not**: Doesn't integrate with @grafana/create-plugin tooling
 
@@ -183,34 +204,34 @@ Extend Grafana's webpack configuration to add Vue loader and configure PEV2 bund
 **Webpack Configuration** (`.config/webpack/webpack.config.ts`):
 
 ```typescript
-import { Configuration } from 'webpack';
-import { getPluginJson } from '@grafana/toolkit';
+import { Configuration } from "webpack";
+import { getPluginJson } from "@grafana/toolkit";
 
 const config: Configuration = {
   // ... existing Grafana config
-  
+
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.vue'],
+    extensions: [".ts", ".tsx", ".js", ".vue"],
     alias: {
       // Use runtime-only build (no template compiler)
-      vue: 'vue/dist/vue.runtime.esm-bundler.js',
+      vue: "vue/dist/vue.runtime.esm-bundler.js",
     },
   },
-  
+
   module: {
     rules: [
       // ... existing rules
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
+        loader: "vue-loader",
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: ["style-loader", "css-loader"],
       },
     ],
   },
-  
+
   plugins: [
     // ... existing plugins
     new DefinePlugin({
@@ -224,6 +245,7 @@ const config: Configuration = {
 ```
 
 **Package Dependencies**:
+
 ```json
 {
   "dependencies": {
@@ -238,17 +260,20 @@ const config: Configuration = {
 ```
 
 **CSS Handling**:
+
 - Use `style-loader` to inject CSS into DOM
 - PEV2 styles imported: `import 'pev2/dist/style.css'`
 - Theme overrides in separate file: `src/styles/pev2-overrides.css`
 
 **Bundle Size Optimization**:
+
 - Vue runtime-only build (~70KB gzipped)
 - PEV2 library (~200KB gzipped)
 - Total expected: ~1.5MB uncompressed, ~400KB gzipped
 - Well within 2MB requirement
 
 **Key Points**:
+
 - Extend, don't replace Grafana webpack config
 - Use runtime-only Vue (no template compiler)
 - DefinePlugin flags reduce bundle size
@@ -259,9 +284,11 @@ const config: Configuration = {
 ## Decision 0.4: Grafana DataFrame to EXPLAIN Plan Extraction
 
 ### Decision
+
 Access DataFrame series fields by name, retrieve first value as string, with comprehensive error handling for missing fields and empty data.
 
 ### Rationale
+
 - **Type Safety**: DataFrame structure is well-typed in @grafana/data
 - **Simplicity**: Direct field access, no complex transformations
 - **Flexibility**: Works with any data source (PostgreSQL, JSON API, TestData)
@@ -270,23 +297,27 @@ Access DataFrame series fields by name, retrieve first value as string, with com
 ### Alternatives Considered
 
 **1. Grafana Transformations API**
+
 - **Rejected**: Adds unnecessary complexity for simple field extraction
 - **Why Not**: Over-engineered for single-field access
 
 **2. DataFrame.toCSV() then Parse**
+
 - **Rejected**: Performance overhead, data serialization/parsing
 - **Why Not**: Introduces string parsing complexity
 
 **3. Assume First Field**
+
 - **Rejected**: Not configurable, breaks with multi-field queries
 - **Why Not**: Violates user story 4 (data source flexibility)
 
 ### Implementation Guide
 
 **DataFrame Structure** (from @grafana/data):
+
 ```typescript
 interface PanelData {
-  series: DataFrame[];  // Array of data frames
+  series: DataFrame[]; // Array of data frames
   state: LoadingState;
   timeRange: TimeRange;
 }
@@ -306,56 +337,52 @@ interface Field {
 ```
 
 **Extraction Logic**:
-```typescript
-import { PanelData, Field } from '@grafana/data';
 
-function extractPlanData(
-  data: PanelData,
-  fieldName: string
-): string {
+```typescript
+import { PanelData, Field } from "@grafana/data";
+
+function extractPlanData(data: PanelData, fieldName: string): string {
   // 1. Validate series exists
   if (!data.series || data.series.length === 0) {
-    throw new Error('NO_DATA');
+    throw new Error("NO_DATA");
   }
-  
+
   // 2. Get first series (use first row)
   const series = data.series[0];
-  
+
   // 3. Log warning if multiple series
   if (data.series.length > 1) {
     console.warn(
-      `Multiple series detected (${data.series.length}). Using first series.`
+      `Multiple series detected (${data.series.length}). Using first series.`,
     );
   }
-  
+
   // 4. Find field by name
-  const field = series.fields.find(f => f.name === fieldName);
-  
+  const field = series.fields.find((f) => f.name === fieldName);
+
   if (!field) {
-    const available = series.fields.map(f => f.name).join(', ');
-    throw new Error(
-      `FIELD_NOT_FOUND: "${fieldName}". Available: ${available}`
-    );
+    const available = series.fields.map((f) => f.name).join(", ");
+    throw new Error(`FIELD_NOT_FOUND: "${fieldName}". Available: ${available}`);
   }
-  
+
   // 5. Get first value
   if (field.values.length === 0) {
-    throw new Error('NO_DATA: Field is empty');
+    throw new Error("NO_DATA: Field is empty");
   }
-  
+
   const value = field.values.get(0);
-  
+
   // 6. Convert to string
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     return value;
   }
-  
-  if (typeof value === 'object') {
+
+  if (typeof value === "object") {
     return JSON.stringify(value);
   }
-  
+
   throw new Error(
-    `INVALID_FORMAT: Field value is ${typeof value}, expected string or object`
+    `INVALID_FORMAT: Field value is ${typeof value}, expected string or object`,
   );
 }
 ```
@@ -363,6 +390,7 @@ function extractPlanData(
 **PostgreSQL Data Source Examples**:
 
 **EXPLAIN (FORMAT JSON)**:
+
 ```sql
 -- Query
 EXPLAIN (FORMAT JSON) SELECT * FROM users;
@@ -382,6 +410,7 @@ EXPLAIN (FORMAT JSON) SELECT * FROM users;
 ```
 
 **Plain Text EXPLAIN**:
+
 ```sql
 -- Query
 EXPLAIN SELECT * FROM users;
@@ -401,6 +430,7 @@ EXPLAIN SELECT * FROM users;
 ```
 
 **Key Points**:
+
 - Always use first series, first row
 - Field name is configurable (default: "plan" or "QUERY PLAN")
 - Handle both string and object field types
@@ -412,9 +442,11 @@ EXPLAIN SELECT * FROM users;
 ## Decision 0.5: PostgreSQL EXPLAIN JSON Format
 
 ### Decision
+
 Define comprehensive TypeScript interfaces matching PostgreSQL 10-16 EXPLAIN (FORMAT JSON) output structure, with all optional fields marked as such.
 
 ### Rationale
+
 - **Type Safety**: Compile-time validation prevents runtime errors
 - **Documentation**: Types serve as living documentation
 - **IDE Support**: Autocomplete and inline docs
@@ -423,14 +455,17 @@ Define comprehensive TypeScript interfaces matching PostgreSQL 10-16 EXPLAIN (FO
 ### Alternatives Considered
 
 **1. Use `any` Type**
+
 - **Rejected**: Loses type safety, no IDE support
 - **Why Not**: Violates principle VII (Type Safety)
 
 **2. Runtime Validation Only**
+
 - **Rejected**: Errors caught at runtime, not compile time
 - **Why Not**: TypeScript provides free compile-time checks
 
 **3. Use PEV2 Types**
+
 - **Rejected**: PEV2 may not expose complete type definitions
 - **Why Not**: Need control over our own type contracts
 
@@ -444,10 +479,10 @@ Define comprehensive TypeScript interfaces matching PostgreSQL 10-16 EXPLAIN (FO
  */
 export interface ExecutionPlan {
   Plan: PlanNode;
-  "Planning Time"?: number;  // ms
+  "Planning Time"?: number; // ms
   "Execution Time"?: number; // ms
   Triggers?: Trigger[];
-  "JIT"?: JITInfo;
+  JIT?: JITInfo;
 }
 
 /**
@@ -457,55 +492,55 @@ export interface PlanNode {
   // Node identification
   "Node Type": NodeType;
   "Parent Relationship"?: ParentRelationship;
-  
+
   // Cost estimates
   "Startup Cost": number;
   "Total Cost": number;
   "Plan Rows": number;
   "Plan Width": number;
-  
+
   // Actual execution (if ANALYZE)
   "Actual Startup Time"?: number;
   "Actual Total Time"?: number;
   "Actual Rows"?: number;
   "Actual Loops"?: number;
-  
+
   // Relation info (for scans)
   "Relation Name"?: string;
-  "Schema"?: string;
-  "Alias"?: string;
-  
+  Schema?: string;
+  Alias?: string;
+
   // Index info
   "Index Name"?: string;
   "Index Cond"?: string;
-  
+
   // Filters and conditions
-  "Filter"?: string;
+  Filter?: string;
   "Rows Removed by Filter"?: number;
   "Join Type"?: JoinType;
   "Join Filter"?: string;
-  
+
   // Sorting
   "Sort Key"?: string[];
   "Sort Method"?: string;
   "Sort Space Used"?: number;
   "Sort Space Type"?: "Memory" | "Disk";
-  
+
   // Aggregation
   "Group Key"?: string[];
   "Partial Mode"?: string;
-  
+
   // Output
-  "Output"?: string[];
-  
+  Output?: string[];
+
   // Child plans
   Plans?: PlanNode[];
-  
+
   // Workers (parallel query)
   "Workers Planned"?: number;
   "Workers Launched"?: number;
   "Worker Number"?: number;
-  
+
   // Additional fields
   "Shared Hit Blocks"?: number;
   "Shared Read Blocks"?: number;
@@ -564,7 +599,13 @@ export type NodeType =
   | "ModifyTable"
   | "Memoize";
 
-export type ParentRelationship = "Outer" | "Inner" | "Subquery" | "Member" | "InitPlan" | "SubPlan";
+export type ParentRelationship =
+  | "Outer"
+  | "Inner"
+  | "Subquery"
+  | "Member"
+  | "InitPlan"
+  | "SubPlan";
 
 export type JoinType = "Inner" | "Left" | "Full" | "Right" | "Semi" | "Anti";
 
@@ -573,28 +614,28 @@ export type JoinType = "Inner" | "Left" | "Full" | "Right" | "Semi" | "Anti";
  */
 export interface Trigger {
   "Trigger Name": string;
-  "Relation": string;
-  "Time": number;
-  "Calls": number;
+  Relation: string;
+  Time: number;
+  Calls: number;
 }
 
 /**
  * JIT compilation information
  */
 export interface JITInfo {
-  "Functions"?: number;
-  "Options": {
-    "Inlining": boolean;
-    "Optimization": boolean;
-    "Expressions": boolean;
-    "Deforming": boolean;
+  Functions?: number;
+  Options: {
+    Inlining: boolean;
+    Optimization: boolean;
+    Expressions: boolean;
+    Deforming: boolean;
   };
-  "Timing"?: {
-    "Generation": number;
-    "Inlining": number;
-    "Optimization": number;
-    "Emission": number;
-    "Total": number;
+  Timing?: {
+    Generation: number;
+    Inlining: number;
+    Optimization: number;
+    Emission: number;
+    Total: number;
   };
 }
 
@@ -604,32 +645,34 @@ export interface JITInfo {
 export function isValidPlan(obj: any): obj is ExecutionPlan {
   return (
     obj &&
-    typeof obj === 'object' &&
-    'Plan' in obj &&
-    typeof obj.Plan === 'object' &&
-    'Node Type' in obj.Plan &&
-    'Startup Cost' in obj.Plan &&
-    'Total Cost' in obj.Plan
+    typeof obj === "object" &&
+    "Plan" in obj &&
+    typeof obj.Plan === "object" &&
+    "Node Type" in obj.Plan &&
+    "Startup Cost" in obj.Plan &&
+    "Total Cost" in obj.Plan
   );
 }
 ```
 
 **Usage Example**:
+
 ```typescript
-import { ExecutionPlan, isValidPlan } from './plan-types';
+import { ExecutionPlan, isValidPlan } from "./plan-types";
 
 function parsePlan(jsonString: string): ExecutionPlan {
   const parsed = JSON.parse(jsonString);
-  
+
   if (!isValidPlan(parsed)) {
-    throw new Error('Invalid execution plan structure');
+    throw new Error("Invalid execution plan structure");
   }
-  
+
   return parsed;
 }
 ```
 
 **Key Points**:
+
 - All required fields are non-optional
 - Optional fields use `?:` syntax
 - String literal types for enums
@@ -642,9 +685,11 @@ function parsePlan(jsonString: string): ExecutionPlan {
 ## Decision 0.6: Error Handling Patterns in Grafana Plugins
 
 ### Decision
+
 Use React Error Boundaries for component errors, typed error states for data errors, and @grafana/ui Alert component for user-facing messages.
 
 ### Rationale
+
 - **Separation**: Component errors vs data errors require different handling
 - **User Experience**: Alert component provides consistent Grafana UX
 - **Debugging**: Console logs with context aid troubleshooting
@@ -653,14 +698,17 @@ Use React Error Boundaries for component errors, typed error states for data err
 ### Alternatives Considered
 
 **1. Try-Catch Only**
+
 - **Rejected**: Doesn't catch React component errors
 - **Why Not**: Incomplete error coverage
 
 **2. Global Error Handler**
+
 - **Rejected**: Too coarse-grained, loses error context
 - **Why Not**: Can't provide specific resolution hints
 
 **3. Custom Error UI**
+
 - **Rejected**: Inconsistent with Grafana design system
 - **Why Not**: @grafana/ui provides standard components
 
@@ -671,12 +719,12 @@ Use React Error Boundaries for component errors, typed error states for data err
 ```typescript
 // error-types.ts
 export enum ErrorType {
-  NO_DATA = 'NO_DATA',
-  FIELD_NOT_FOUND = 'FIELD_NOT_FOUND',
-  INVALID_FORMAT = 'INVALID_FORMAT',
-  PARSE_ERROR = 'PARSE_ERROR',
-  RENDER_ERROR = 'RENDER_ERROR',
-  CSP_VIOLATION = 'CSP_VIOLATION',
+  NO_DATA = "NO_DATA",
+  FIELD_NOT_FOUND = "FIELD_NOT_FOUND",
+  INVALID_FORMAT = "INVALID_FORMAT",
+  PARSE_ERROR = "PARSE_ERROR",
+  RENDER_ERROR = "RENDER_ERROR",
+  CSP_VIOLATION = "CSP_VIOLATION",
 }
 
 export interface ErrorState {
@@ -690,10 +738,10 @@ export class PlanError extends Error {
   constructor(
     public readonly errorType: ErrorType,
     message: string,
-    public readonly details?: string
+    public readonly details?: string,
   ) {
     super(message);
-    this.name = 'PlanError';
+    this.name = "PlanError";
   }
 }
 ```
@@ -783,26 +831,26 @@ export const ErrorDisplay: React.FC<Props> = ({ error }) => {
 **Service Error Handling**:
 
 ```typescript
-import { ErrorType, PlanError } from '../types/error-types';
+import { ErrorType, PlanError } from "../types/error-types";
 
 function extractPlanData(data: PanelData, fieldName: string): string {
   try {
     if (!data.series || data.series.length === 0) {
       throw new PlanError(
         ErrorType.NO_DATA,
-        'No data available',
-        'DataFrame is empty or undefined'
+        "No data available",
+        "DataFrame is empty or undefined",
       );
     }
 
-    const field = data.series[0].fields.find(f => f.name === fieldName);
-    
+    const field = data.series[0].fields.find((f) => f.name === fieldName);
+
     if (!field) {
-      const available = data.series[0].fields.map(f => f.name).join(', ');
+      const available = data.series[0].fields.map((f) => f.name).join(", ");
       throw new PlanError(
         ErrorType.FIELD_NOT_FOUND,
         `Field "${fieldName}" not found`,
-        `Available fields: ${available}`
+        `Available fields: ${available}`,
       );
     }
 
@@ -811,12 +859,12 @@ function extractPlanData(data: PanelData, fieldName: string): string {
     if (error instanceof PlanError) {
       throw error;
     }
-    
+
     // Wrap unexpected errors
     throw new PlanError(
       ErrorType.RENDER_ERROR,
-      'Unexpected error during data extraction',
-      error instanceof Error ? error.message : String(error)
+      "Unexpected error during data extraction",
+      error instanceof Error ? error.message : String(error),
     );
   }
 }
@@ -877,11 +925,11 @@ export const logger = {
       timestamp: new Date().toISOString(),
     });
   },
-  
+
   warn: (context: string, message: string, data?: any) => {
     console.warn(`[PEV Panel] ${context}:`, message, data);
   },
-  
+
   info: (context: string, message: string, data?: any) => {
     console.info(`[PEV Panel] ${context}:`, message, data);
   },
@@ -889,6 +937,7 @@ export const logger = {
 ```
 
 **Key Points**:
+
 - Error Boundary catches React errors
 - Typed errors for data processing
 - @grafana/ui Alert for consistent UX

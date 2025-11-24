@@ -43,6 +43,7 @@ npm install
 ```
 
 This installs:
+
 - Grafana plugin SDK (@grafana/data, @grafana/ui, @grafana/runtime)
 - Vue 3 runtime
 - PEV2 library
@@ -52,16 +53,19 @@ This installs:
 ### Step 3: Build Plugin
 
 **Development Build** (with source maps):
+
 ```bash
 npm run dev
 ```
 
 **Production Build** (optimized):
+
 ```bash
 npm run build
 ```
 
 Build output is created in `dist/` directory:
+
 - `module.js` - Main plugin bundle
 - `module.js.map` - Source map for debugging
 - `plugin.json` - Plugin metadata
@@ -141,6 +145,7 @@ net stop "Grafana" && net start "Grafana"
 ### Test 2: Using PostgreSQL Data Source
 
 **Setup PostgreSQL Data Source**:
+
 1. Navigate to **Configuration > Data Sources**
 2. Add **PostgreSQL** data source
 3. Configure connection:
@@ -152,6 +157,7 @@ net stop "Grafana" && net start "Grafana"
 4. Click **Save & Test**
 
 **Create EXPLAIN Panel**:
+
 1. Create new dashboard
 2. Add new panel
 3. Select visualization: **Postgres Explain Visualizer**
@@ -174,6 +180,7 @@ net stop "Grafana" && net start "Grafana"
 ### Test 3: Using JSON API Data Source
 
 **Mock JSON API** (using TestData):
+
 1. Create panel
 2. Data source: **TestData DB**
 3. Scenario: **JSON**
@@ -184,23 +191,23 @@ net stop "Grafana" && net start "Grafana"
        "Plan": {
          "Node Type": "Hash Join",
          "Join Type": "Inner",
-         "Startup Cost": 45.00,
-         "Total Cost": 125.50,
+         "Startup Cost": 45.0,
+         "Total Cost": 125.5,
          "Plan Rows": 500,
          "Plan Width": 360,
          "Plans": [
            {
              "Node Type": "Seq Scan",
              "Relation Name": "users",
-             "Startup Cost": 0.00,
-             "Total Cost": 35.50,
+             "Startup Cost": 0.0,
+             "Total Cost": 35.5,
              "Plan Rows": 1000,
              "Plan Width": 244
            },
            {
              "Node Type": "Hash",
-             "Startup Cost": 10.00,
-             "Total Cost": 10.00,
+             "Startup Cost": 10.0,
+             "Total Cost": 10.0,
              "Plan Rows": 250,
              "Plan Width": 116
            }
@@ -234,7 +241,7 @@ SELECT * FROM users WHERE id = 12345;
 
 ```sql
 EXPLAIN (FORMAT JSON, ANALYZE, BUFFERS)
-SELECT 
+SELECT
   u.country,
   COUNT(*) as user_count,
   AVG(o.total) as avg_order_total
@@ -327,6 +334,7 @@ npm run dev
 ### Debugging
 
 **Browser DevTools**:
+
 1. Open panel in Grafana
 2. Press F12 to open DevTools
 3. Go to Sources tab
@@ -334,16 +342,18 @@ npm run dev
 5. Set breakpoints and inspect variables
 
 **Console Logging**:
+
 ```typescript
 // Use logger utility
-import { logger } from './utils/logger';
+import { logger } from "./utils/logger";
 
-logger.info('DataExtractor', 'Extracting plan data', { data, options });
-logger.warn('FormatDetector', 'Multiple series detected', { count });
-logger.error('TextParser', 'Parse failed', error, { input });
+logger.info("DataExtractor", "Extracting plan data", { data, options });
+logger.warn("FormatDetector", "Multiple series detected", { count });
+logger.error("TextParser", "Parse failed", error, { input });
 ```
 
 **React DevTools**:
+
 1. Install React DevTools browser extension
 2. Open extension in Grafana
 3. Inspect component tree and props
@@ -373,19 +383,22 @@ npm run lint:fix
 **Symptoms**: Plugin doesn't show in plugin list
 
 **Solutions**:
+
 1. Check dist/ directory exists and contains built files
 2. Verify plugin.json has correct structure
 3. Check Grafana logs for loading errors:
+
    ```bash
    # Docker
    docker logs grafana
-   
+
    # Linux
    sudo journalctl -u grafana-server -f
-   
+
    # Check log file directly
    tail -f /var/log/grafana/grafana.log
    ```
+
 4. Restart Grafana after plugin installation
 5. Check Grafana configuration allows unsigned plugins:
    ```ini
@@ -398,6 +411,7 @@ npm run lint:fix
 **Symptoms**: `npm run build` fails
 
 **Solutions**:
+
 1. Delete node_modules and reinstall:
    ```bash
    rm -rf node_modules package-lock.json
@@ -418,6 +432,7 @@ npm run lint:fix
 **Symptoms**: Panel displays "No data available" message
 
 **Solutions**:
+
 1. Verify query returns data (test in query inspector)
 2. Check field name matches panel option:
    - PostgreSQL: typically "QUERY PLAN"
@@ -432,15 +447,18 @@ npm run lint:fix
 **Symptoms**: Panel is blank or shows error
 
 **Solutions**:
+
 1. Check browser console for errors
 2. Verify EXPLAIN output is valid JSON:
+
    ```sql
    -- Use FORMAT JSON
    EXPLAIN (FORMAT JSON) SELECT ...;
-   
+
    -- Not just EXPLAIN
    -- EXPLAIN SELECT ...; -- This returns text format
    ```
+
 3. Test with simple query first:
    ```sql
    EXPLAIN (FORMAT JSON) SELECT 1;
@@ -452,6 +470,7 @@ npm run lint:fix
 **Symptoms**: Console shows "blocked by Content Security Policy"
 
 **Solutions**:
+
 1. Verify all assets are bundled (no CDN URLs)
 2. Check Grafana CSP settings in grafana.ini:
    ```ini
@@ -467,6 +486,7 @@ npm run lint:fix
 **Symptoms**: Panel is slow or unresponsive
 
 **Solutions**:
+
 1. Reduce plan complexity (add WHERE clause to query)
 2. Increase fontSize option (less elements to render)
 3. Use EXPLAIN without ANALYZE for faster planning
@@ -480,12 +500,12 @@ npm run lint:fix
 
 Available in panel editor under "Panel options":
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| Plan Field Name | string | "plan" | DataFrame field with EXPLAIN data |
-| Force JSON Mode | boolean | false | Skip format detection |
-| Font Size | number | 14 | Text size (10-24 px) |
-| Dark Mode | boolean | false | Override theme detection |
+| Option          | Type    | Default | Description                       |
+| --------------- | ------- | ------- | --------------------------------- |
+| Plan Field Name | string  | "plan"  | DataFrame field with EXPLAIN data |
+| Force JSON Mode | boolean | false   | Skip format detection             |
+| Font Size       | number  | 14      | Text size (10-24 px)              |
+| Dark Mode       | boolean | false   | Override theme detection          |
 
 ### Environment Variables
 

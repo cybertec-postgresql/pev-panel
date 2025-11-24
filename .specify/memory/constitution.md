@@ -3,7 +3,7 @@
   ==================
   Version Change: NONE → 1.0.0
   Constitution Type: New (Initial Ratification)
-  
+
   Principles Defined:
   1. Security First
   2. Deterministic & Production-Grade
@@ -15,21 +15,21 @@
   8. PEV2 Integration
   9. Error Handling
   10. Performance
-  
+
   Additional Sections:
   - Quality Standards
   - Development Workflow
   - Governance
-  
+
   Templates Status:
   ✅ plan-template.md - Reviewed, no updates needed (generic template structure compatible)
   ✅ spec-template.md - Reviewed, no updates needed (generic template structure compatible)
   ✅ tasks-template.md - Reviewed, no updates needed (generic template structure compatible)
   ✅ agent-file-template.md - Reviewed, no updates needed (generic template)
   ✅ checklist-template.md - Reviewed, no updates needed (generic template)
-  
+
   Follow-up TODOs: None
-  
+
   Generated: 2025-11-24
 -->
 
