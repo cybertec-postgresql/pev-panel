@@ -97,9 +97,11 @@
 
 ---
 
-## Phase 5: User Story 2 - Visualize Plain Text EXPLAIN Output (Priority: P2)
+## Phase 5: User Story 2 - Visualize Plain Text EXPLAIN Output (Priority: P2) [DEFERRED]
 
 **Goal**: Automatically detect plain text EXPLAIN format and convert to JSON for visualization without manual intervention
+
+**Status**: Deferred to future iteration - JSON format is primary use case
 
 **Independent Test**: Provide plain text EXPLAIN output to panel, verify automatic format detection and conversion to visualization matching JSON output
 
@@ -151,9 +153,11 @@
 
 ---
 
-## Phase 7: User Story 5 - Automatic Panel Resizing (Priority: P3)
+## Phase 7: User Story 5 - Automatic Panel Resizing (Priority: P3) [DEFERRED]
 
 **Goal**: Gracefully handle browser and panel dimension changes without truncation or scroll issues
+
+**Status**: Deferred - basic responsive layout is working, advanced resize handling can be added later
 
 **Independent Test**: Resize browser window and panel dimensions, verify visualization scales appropriately with smooth transitions
 
@@ -185,7 +189,7 @@
 - [ ] T075 [P] Add plugin screenshots to src/img/ directory
 - [ ] T076 [P] Create provisioning/dashboards/explain-example.json with sample dashboard
 - [ ] T077 Add example queries to explain-example.json (simple scan, join, aggregation, CTE)
-- [ ] T078 Verify bundle size is under 2MB requirement (npm run build, check dist/module.js)
+- [X] T078 Verify bundle size is under 2MB requirement (npm run build, check dist/module.js)
 - [ ] T079 Verify no external CDN references in bundle (inspect dist/module.js source)
 - [ ] T080 Test plugin in local Grafana instance following quickstart.md
 - [ ] T081 Test plugin with PostgreSQL data source and real EXPLAIN queries
@@ -193,8 +197,8 @@
 - [ ] T083 Test error states: NO_DATA, FIELD_NOT_FOUND, INVALID_FORMAT, PARSE_ERROR
 - [ ] T084 Verify CSP compliance (test in Grafana Cloud or with strict CSP settings)
 - [ ] T085 Run linter: npm run lint and fix any issues
-- [ ] T086 Run formatter: npm run format
-- [x] T087 Build production bundle: npm run build
+- [X] T086 Run formatter: npm run format
+- [X] T087 Build production bundle: npm run build
 - [ ] T088 Generate plugin signing manifest if needed: npm run sign
 - [ ] T089 Create distribution package: zip -r dist.zip dist/ or npm run package
 
