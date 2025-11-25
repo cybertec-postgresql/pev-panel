@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Grafana panel plugin for visualizing PostgreSQL EXPLAIN output using PEV2",
   "scripts": {
-    "build": "webpack -c ./webpack.config.ts --env production",
+    "build": "node scripts/build.js",
     "dev": "webpack -w -c ./webpack.config.ts --env development",
     "test": "jest --watch --onlyChanged",
     "test:ci": "jest --passWithNoTests --maxWorkers 4",
@@ -15,6 +15,8 @@
     "e2e:update": "npm exec cypress install && npm exec grafana-e2e run --update-screenshots",
     "server": "docker compose up --build",
     "sign": "npx --yes @grafana/sign-plugin@latest",
+    "package": "npm run build && node scripts/package.js",
+    "clean": "node scripts/clean.js",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,scss,md}\""
   },
   "author": "Cybertec",
@@ -34,6 +36,7 @@
     "@types/react-dom": "^18.2.0",
     "@types/webpack-livereload-plugin": "^2.3.6",
     "@vue/compiler-sfc": "^3.4.0",
+    "archiver": "^7.0.1",
     "bootstrap": "5.3.8",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.3",

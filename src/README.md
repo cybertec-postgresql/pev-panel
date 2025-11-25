@@ -114,6 +114,177 @@ All configuration is done through panel options:
 | Font Size       | Visualization text size (px)            | 14      |
 | Dark Mode       | Force dark theme                        | false   |
 
+## Development Scripts
+
+All scripts work on Windows, Linux, and macOS:
+
+```bash
+# Build the plugin
+npm run build
+
+# Start development server with hot reload
+npm run dev
+
+# Run tests
+npm test
+
+# Run tests in CI mode
+npm run test:ci
+
+# Type checking
+npm run typecheck
+
+# Lint code
+npm run lint
+npm run lint:fix
+
+# Format code
+npm run format
+
+# Clean build artifacts
+npm run clean
+
+# Create distribution package
+npm run package
+
+# Sign plugin (requires GRAFANA_ACCESS_POLICY_TOKEN)
+npm run sign
+```
+
+## Publishing to Grafana Marketplace
+
+To publish this plugin to the official Grafana plugin catalog, follow these steps:
+
+### Prerequisites
+
+1. **Create a Grafana Cloud account** at [grafana.com](https://grafana.com)
+2. **Generate an access policy token**:
+   - Navigate to [Grafana Cloud Portal](https://grafana.com/orgs)
+   - Go to "Access Policies"
+   - Create a new token with plugin signing permissions
+   - Copy the token value
+
+### Signing the Plugin
+
+Plugin signing is **required** for all plugins published to Grafana:
+
+```bash
+# Set the access policy token as an environment variable
+export GRAFANA_ACCESS_POLICY_TOKEN=your_token_here
+
+# Sign the plugin
+npm run sign
+```
+
+This generates a `MANIFEST.txt` file in the `dist/` directory containing cryptographic signatures.
+
+### Creating the Distribution Package
+
+```bash
+# Build and package the plugin
+npm run package
+```
+
+This creates `cybertec-pev-panel.zip` containing the signed distribution.
+
+### Submitting to Grafana Catalog
+
+1. **Prepare plugin metadata**:
+   - Ensure `src/plugin.json` has complete information
+   - Add high-quality screenshots to `src/img/`
+   - Create a compelling logo (`src/img/logo.svg`)
+   - Verify all links and documentation
+
+2. **Submit the plugin**:
+   - Go to [Grafana Plugin Submission](https://grafana.com/plugins/submit)
+   - Fill out the submission form
+   - Upload your signed plugin package
+   - Provide required metadata (category, description, screenshots)
+
+3. **Review process**:
+   - Grafana team reviews your submission
+   - They check code quality, security, and functionality
+   - Review typically takes 5-10 business days
+   - You may be asked for changes or clarifications
+
+4. **Publication**:
+   - Once approved, your plugin appears in the catalog
+   - Users can install it via `grafana-cli` or the UI
+   - Updates follow the same signing and submission process
+
+### Installation via grafana-cli
+
+After publication, users can install your plugin with:
+
+```bash
+grafana-cli plugins install cybertec-pev-panel
+```
+
+### Private Distribution
+
+If you don't want to publish publicly, you can distribute the signed plugin package directly:
+
+1. Share the `cybertec-pev-panel.zip` file
+2. Users extract it to their Grafana plugins directory
+3. Restart Grafana to load the plugin
+
+For more details, see the [Grafana Plugin Publishing Guide](https://grafana.com/developers/plugin-tools/publish-a-plugin).
+
+## Automated Releases with GitHub Actions
+
+This project includes a GitHub Actions workflow that automatically builds, tests, signs, and publishes release artifacts when you push a version tag.
+
+### Creating a Release
+
+1. **Update version** in `src/plugin.json`:
+   ```json
+   {
+     "info": {
+       "version": "1.2.0"
+     }
+   }
+   ```
+
+2. **Commit and tag**:
+   ```bash
+   git add src/plugin.json
+   git commit -m "Release v1.2.0"
+   git tag v1.2.0
+   git push origin main --tags
+   ```
+
+3. **GitHub Actions will automatically**:
+   - Install dependencies
+   - Run tests and linting
+   - Build the plugin
+   - Sign the plugin (if `GRAFANA_ACCESS_POLICY_TOKEN` secret is set)
+   - Create distribution package
+   - Create a GitHub Release with artifacts
+   - Upload the signed plugin package
+
+### Setting Up Plugin Signing in CI
+
+To enable automatic plugin signing in GitHub Actions:
+
+1. Generate an access policy token from [Grafana Cloud Portal](https://grafana.com/orgs)
+2. Add it as a repository secret:
+   - Go to your GitHub repository → Settings → Secrets and variables → Actions
+   - Click "New repository secret"
+   - Name: `GRAFANA_ACCESS_POLICY_TOKEN`
+   - Value: Your token from step 1
+   - Click "Add secret"
+
+The workflow will automatically sign the plugin when this secret is present.
+
+### Release Artifacts
+
+Each release includes:
+- `cybertec-pev-panel.zip` - Signed plugin package ready for installation
+- `MANIFEST.txt` - Cryptographic signature for verification
+- Full `dist/` directory with all build outputs
+
+Users can download the zip file and install it manually, or you can submit it to the Grafana plugin catalog.
+
 ## Contributing
 
 Contributions are welcome! Please:
