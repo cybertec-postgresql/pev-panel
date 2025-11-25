@@ -77,13 +77,8 @@
   margin-bottom: 0;
 }
 
-/* Inherit Grafana theme colors */
-.pev2-panel-container .bg-light,
-.pev2-panel-container .bg-white {
-  background-color: transparent !important;
-}
-
+/* Ensure node cards have solid white background (not transparent) */
 .pev2-panel-container .card,
 .pev2-panel-container .card-body {
-  background-color: transparent;
+  background-color: #fff !important;
 }
