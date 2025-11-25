@@ -4,4 +4,18 @@ datasources:
   - name: TestData DB
     type: testdata
     uid: trlxrdZVk
+    isDefault: false
+
+  - name: PostgreSQL
+    type: postgres
+    uid: postgres-testdb
     isDefault: true
+    url: postgres:5432
+    database: testdb
+    user: testuser
+    secureJsonData:
+      password: testpass
+    jsonData:
+      sslmode: disable
+      postgresVersion: 1600
+      timescaledb: false

@@ -144,8 +144,8 @@
 - [x] T056 [US3] Pass darkMode option to VueMount.tsx component props
 - [x] T057 [US3] Apply fontSize to PEV2 component in VueMount.tsx (via Vue props or CSS variable)
 - [x] T058 [US3] Apply darkMode to PEV2 component in VueMount.tsx (via Vue props or CSS class)
-- [ ] T059 [US3] Create src/styles/pev2-overrides.css for theme-aware PEV2 styling
-- [ ] T060 [US3] Import pev2-overrides.css in VueMount.tsx
+- [x] T059 [US3] Create src/styles/pev2-overrides.css for theme-aware PEV2 styling
+- [x] T060 [US3] Import pev2-overrides.css in VueMount.tsx
 - [ ] T061 [US3] Use Grafana theme variables in pev2-overrides.css (--grafana-font-family, --grafana-text-primary)
 - [x] T062 [US3] Verify options persist when dashboard is saved and reloaded
 
@@ -165,14 +165,14 @@
 
 ### Implementation for User Story 5
 
-- [ ] T063 [US5] Add width and height props tracking in ExplainPanel.tsx
-- [ ] T064 [US5] Pass width and height to VueMount.tsx component
-- [ ] T065 [US5] Implement resize handler in VueMount.tsx using useEffect with [width, height] dependencies
-- [ ] T066 [US5] Update container div dimensions in VueMount.tsx when width/height change
+- [x] T063 [US5] Add width and height props tracking in ExplainPanel.tsx
+- [x] T064 [US5] Pass width and height to VueMount.tsx component
+- [x] T065 [US5] Implement resize handler in VueMount.tsx using useEffect with [width, height] dependencies
+- [x] T066 [US5] Update container div dimensions in VueMount.tsx when width/height change
 - [ ] T067 [US5] Trigger PEV2 layout recalculation on resize (if PEV2 exposes resize API)
-- [ ] T068 [US5] Add CSS overflow: auto to container div in VueMount.tsx for scrolling when needed
+- [x] T068 [US5] Add CSS overflow: auto to container div in VueMount.tsx for scrolling when needed
 - [ ] T069 [US5] Add debouncing to resize handler for performance (optional, if needed)
-- [ ] T070 [US5] Verify resize performance meets < 500ms requirement
+- [x] T070 [US5] Verify resize performance meets < 500ms requirement
 
 **Checkpoint**: Panel resizing works smoothly - visualization adapts to container dimensions
 
@@ -187,13 +187,13 @@
 - [x] T073 [P] Create CHANGELOG.md with initial version entry
 - [ ] T074 [P] Add plugin logo to src/img/logo.svg
 - [ ] T075 [P] Add plugin screenshots to src/img/ directory
-- [ ] T076 [P] Create provisioning/dashboards/explain-example.json with sample dashboard
-- [ ] T077 Add example queries to explain-example.json (simple scan, join, aggregation, CTE)
+- [x] T076 [P] Create provisioning/dashboards/explain-example.json with sample dashboard
+- [x] T077 Add example queries to explain-example.json (simple scan, join, aggregation, CTE)
 - [X] T078 Verify bundle size is under 2MB requirement (npm run build, check dist/module.js)
 - [ ] T079 Verify no external CDN references in bundle (inspect dist/module.js source)
-- [ ] T080 Test plugin in local Grafana instance following quickstart.md
-- [ ] T081 Test plugin with PostgreSQL data source and real EXPLAIN queries
-- [ ] T082 Test plugin with TestData data source using CSV and JSON scenarios
+- [x] T080 Test plugin in local Grafana instance following quickstart.md
+- [x] T081 Test plugin with PostgreSQL data source and real EXPLAIN queries
+- [x] T082 Test plugin with TestData data source using CSV and JSON scenarios
 - [ ] T083 Test error states: NO_DATA, FIELD_NOT_FOUND, INVALID_FORMAT, PARSE_ERROR
 - [ ] T084 Verify CSP compliance (test in Grafana Cloud or with strict CSP settings)
 - [ ] T085 Run linter: npm run lint and fix any issues

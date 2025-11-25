@@ -1,0 +1,292 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "postgres-testdb"
+      },
+      "description": "Simple sequential scan - tests basic JSON EXPLAIN visualization",
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "planFieldName": "QUERY PLAN",
+        "forceJsonMode": false,
+        "fontSize": 14,
+        "darkMode": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres-testdb"
+          },
+          "format": "table",
+          "rawSql": "EXPLAIN (FORMAT JSON, ANALYZE, BUFFERS)\nSELECT * FROM users WHERE age > 25;",
+          "refId": "A"
+        }
+      ],
+      "title": "Test 1: Simple Sequential Scan",
+      "type": "cybertec-pev-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "postgres-testdb"
+      },
+      "description": "Index scan - tests index usage visualization",
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "planFieldName": "QUERY PLAN",
+        "forceJsonMode": false,
+        "fontSize": 14,
+        "darkMode": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres-testdb"
+          },
+          "format": "table",
+          "rawSql": "EXPLAIN (FORMAT JSON, ANALYZE)\nSELECT * FROM users WHERE email = 'user500@example.com';",
+          "refId": "A"
+        }
+      ],
+      "title": "Test 2: Index Scan",
+      "type": "cybertec-pev-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "postgres-testdb"
+      },
+      "description": "Join query - tests multi-node visualization",
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "id": 3,
+      "options": {
+        "planFieldName": "QUERY PLAN",
+        "forceJsonMode": false,
+        "fontSize": 14,
+        "darkMode": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres-testdb"
+          },
+          "format": "table",
+          "rawSql": "EXPLAIN (FORMAT JSON, ANALYZE, BUFFERS)\nSELECT u.name, u.email, o.total, o.status\nFROM users u\nJOIN orders o ON u.id = o.user_id\nWHERE u.age > 30 AND o.status = 'completed'\nORDER BY o.total DESC\nLIMIT 20;",
+          "refId": "A"
+        }
+      ],
+      "title": "Test 3: Join Query with Filter",
+      "type": "cybertec-pev-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "postgres-testdb"
+      },
+      "description": "Aggregation query - tests GROUP BY visualization",
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "id": 4,
+      "options": {
+        "planFieldName": "QUERY PLAN",
+        "forceJsonMode": false,
+        "fontSize": 14,
+        "darkMode": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres-testdb"
+          },
+          "format": "table",
+          "rawSql": "EXPLAIN (FORMAT JSON, ANALYZE, BUFFERS)\nSELECT u.country, COUNT(*) as user_count, AVG(o.total) as avg_total\nFROM users u\nLEFT JOIN orders o ON u.id = o.user_id\nGROUP BY u.country\nHAVING COUNT(*) > 50\nORDER BY avg_total DESC;",
+          "refId": "A"
+        }
+      ],
+      "title": "Test 4: Aggregation with GROUP BY",
+      "type": "cybertec-pev-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "postgres-testdb"
+      },
+      "description": "Complex CTE query - tests nested plan visualization",
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "id": 5,
+      "options": {
+        "planFieldName": "QUERY PLAN",
+        "forceJsonMode": false,
+        "fontSize": 14,
+        "darkMode": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres-testdb"
+          },
+          "format": "table",
+          "rawSql": "EXPLAIN (FORMAT JSON, ANALYZE)\nWITH recent_orders AS (\n  SELECT user_id, SUM(total) as total_spent, COUNT(*) as order_count\n  FROM orders\n  WHERE created_at > CURRENT_DATE - INTERVAL '30 days'\n  GROUP BY user_id\n)\nSELECT u.name, u.email, u.country, ro.total_spent, ro.order_count\nFROM users u\nJOIN recent_orders ro ON u.id = ro.user_id\nWHERE ro.total_spent > 100\nORDER BY ro.total_spent DESC\nLIMIT 10;",
+          "refId": "A"
+        }
+      ],
+      "title": "Test 5: CTE Query",
+      "type": "cybertec-pev-panel"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "postgres-testdb"
+      },
+      "description": "Multi-table join - tests complex join tree",
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 6,
+      "options": {
+        "planFieldName": "QUERY PLAN",
+        "forceJsonMode": false,
+        "fontSize": 14,
+        "darkMode": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "postgres-testdb"
+          },
+          "format": "table",
+          "rawSql": "EXPLAIN (FORMAT JSON, ANALYZE, BUFFERS)\nSELECT u.name, o.id as order_id, p.name as product_name, oi.quantity, oi.price\nFROM users u\nJOIN orders o ON u.id = o.user_id\nJOIN order_items oi ON o.id = oi.order_id\nJOIN products p ON oi.product_id = p.id\nWHERE u.country = 'USA' AND p.category = 'Electronics'\nLIMIT 50;",
+          "refId": "A"
+        }
+      ],
+      "title": "Test 6: Multi-Table Join",
+      "type": "cybertec-pev-panel"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "trlxrdZVk"
+      },
+      "description": "CSV format - tests TestData data source with simple plan",
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 36
+      },
+      "id": 7,
+      "options": {
+        "planFieldName": "plan",
+        "forceJsonMode": true,
+        "fontSize": 14,
+        "darkMode": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "testdata",
+            "uid": "trlxrdZVk"
+          },
+          "refId": "A",
+          "scenarioId": "csv_content",
+          "csvContent": "plan\n\"{\"\"Plan\"\":{\"\"Node Type\"\":\"\"Seq Scan\"\",\"\"Relation Name\"\":\"\"users\"\",\"\"Startup Cost\"\":0.00,\"\"Total Cost\"\":35.50,\"\"Plan Rows\"\":1000,\"\"Plan Width\"\":244}}\""
+        }
+      ],
+      "title": "Test 7: TestData CSV - Simple Scan",
+      "type": "cybertec-pev-panel"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "trlxrdZVk"
+      },
+      "description": "CSV format - tests join visualization from TestData",
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 36
+      },
+      "id": 8,
+      "options": {
+        "planFieldName": "plan",
+        "forceJsonMode": true,
+        "fontSize": 14,
+        "darkMode": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "testdata",
+            "uid": "trlxrdZVk"
+          },
+          "refId": "A",
+          "scenarioId": "csv_content",
+          "csvContent": "plan\n\"{\"\"Plan\"\":{\"\"Node Type\"\":\"\"Hash Join\"\",\"\"Join Type\"\":\"\"Inner\"\",\"\"Startup Cost\"\":45.0,\"\"Total Cost\"\":125.5,\"\"Plan Rows\"\":500,\"\"Plan Width\"\":360,\"\"Plans\"\":[{\"\"Node Type\"\":\"\"Seq Scan\"\",\"\"Relation Name\"\":\"\"users\"\",\"\"Startup Cost\"\":0.0,\"\"Total Cost\"\":35.5,\"\"Plan Rows\"\":1000,\"\"Plan Width\"\":244},{\"\"Node Type\"\":\"\"Hash\"\",\"\"Startup Cost\"\":10.0,\"\"Total Cost\"\":10.0,\"\"Plan Rows\"\":250,\"\"Plan Width\"\":116,\"\"Plans\"\":[{\"\"Node Type\"\":\"\"Seq Scan\"\",\"\"Relation Name\"\":\"\"orders\"\",\"\"Startup Cost\"\":0.0,\"\"Total Cost\"\":10.0,\"\"Plan Rows\"\":250,\"\"Plan Width\"\":116}]}]}}\""
+        }
+      ],
+      "title": "Test 8: TestData CSV - Join Query",
+      "type": "cybertec-pev-panel"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 39,
+  "tags": ["pev", "testing", "explain"],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "PEV Panel Test Dashboard",
+  "uid": "pev-test-dashboard",
+  "version": 1
+}

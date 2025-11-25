@@ -1,0 +1,40 @@
+/**
+ * PEV2 Override Styles
+ * 
+ * Ensures PEV2 visualization fills the Grafana panel height
+ * and integrates properly with the panel container.
+ */
+
+/* Ensure PEV2 root container fills available space */
+.d-flex.flex-column.vh-100 {
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
+}
+
+/* Remove fixed viewport height that conflicts with Grafana panels */
+.vh-100 {
+  height: 100% !important;
+}
+
+/* Ensure flex containers stretch to fill */
+.flex-column {
+  flex: 1 1 auto;
+}
+
+/* Make sure the plan diagram container is scrollable */
+.plan-diagram-container {
+  overflow: auto;
+  flex: 1 1 auto;
+}
+
+/* Tabs should not take up too much space */
+.nav-tabs {
+  flex-shrink: 0;
+}
+
+/* Content area should expand to fill */
+.tab-content {
+  flex: 1 1 auto;
+  overflow: auto;
+}

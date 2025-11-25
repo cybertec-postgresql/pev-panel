@@ -6,11 +6,14 @@
  */
 
 import React, { useEffect, useRef } from "react";
-import { App as VueApp } from "vue";
+import { App as VueApp, defineComponent, h } from "vue";
+import { Plan as Pev2Plan } from "pev2";
 import { mountVueApp, unmountVueApp } from "../services/vueBootstrap";
 import { ExecutionPlan } from "../types/plan-types";
 import { logDebug } from "../utils/logger";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "pev2/dist/pev2.css";
+import "../styles/pev2-overrides.css";
 
 const CONTEXT = "VueMount";
 
@@ -51,45 +54,52 @@ export const VueMount: React.FC<Props> = ({
     });
 
     try {
-      // Dynamically import PEV2 Plan component
-      // Note: This requires PEV2 to be installed and built
-      // For now, we'll create a placeholder until PEV2 is properly integrated
-      const PlaceholderComponent = {
-        props: ["plan", "fontSize", "darkMode"],
-        template: `
-          <div style="padding: 20px; font-family: monospace;">
-            <h3>PostgreSQL EXPLAIN Visualization</h3>
-            <div style="margin-top: 10px; padding: 10px; background: #f5f5f5; border-radius: 4px;">
-              <strong>Node Type:</strong> {{ plan.Plan['Node Type'] }}<br>
-              <strong>Total Cost:</strong> {{ plan.Plan['Total Cost'] }}<br>
-              <strong>Plan Rows:</strong> {{ plan.Plan['Plan Rows'] }}<br>
-              <div v-if="plan['Planning Time']" style="margin-top: 8px;">
-                <strong>Planning Time:</strong> {{ plan['Planning Time'] }}ms
-              </div>
-              <div v-if="plan['Execution Time']" style="margin-top: 4px;">
-                <strong>Execution Time:</strong> {{ plan['Execution Time'] }}ms
-              </div>
-              <div style="margin-top: 12px; font-size: 12px; color: #666;">
-                Font Size: {{ fontSize }}px | Dark Mode: {{ darkMode ? 'Yes' : 'No' }}
-              </div>
-              <div style="margin-top: 12px; padding: 10px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px;">
-                <strong>Note:</strong> Full PEV2 visualization will be integrated in the next iteration.
-                This placeholder confirms Vue integration is working correctly.
-              </div>
-            </div>
-          </div>
-        `,
-      };
+      // PEV2 Plan component is imported at the top as ES6 module
+      // Create wrapper component to use PEV2 Plan
+      const WrapperComponent = defineComponent({
+        name: "PEV2Wrapper",
+        components: {
+          pev2: Pev2Plan,
+        },
+        setup() {
+          // Convert plan to JSON string format that PEV2 expects
+          const planSource = JSON.stringify(plan, null, 2);
+          const planQuery = "";
+          
+          return () => h(Pev2Plan, {
+            planSource: planSource,
+            planQuery: planQuery,
+          });
+        },
+      });
 
+      // Mount Vue app with wrapper component
       vueAppRef.current = mountVueApp(
         containerRef.current,
-        PlaceholderComponent,
-        {
-          plan,
-          fontSize,
-          darkMode,
-        },
+        WrapperComponent,
+        {},
       );
+
+      // Apply font size styling
+      if (containerRef.current && fontSize) {
+        containerRef.current.style.fontSize = `${fontSize}px`;
+      }
+
+      // Apply dark mode styling
+      if (containerRef.current && darkMode) {
+        containerRef.current.classList.add("pev2-dark-mode");
+      } else if (containerRef.current) {
+        containerRef.current.classList.remove("pev2-dark-mode");
+      }
+
+      // Ensure PEV2 fills the container height
+      if (containerRef.current) {
+        const pev2Container = containerRef.current.querySelector('.d-flex') as HTMLElement;
+        if (pev2Container) {
+          pev2Container.style.height = '100%';
+          pev2Container.style.minHeight = '100%';
+        }
+      }
     } catch (error) {
       logDebug(CONTEXT, "Error mounting Vue app", error);
       throw error;
@@ -108,9 +118,12 @@ export const VueMount: React.FC<Props> = ({
     <div
       ref={containerRef}
       style={{
-        width: width ? `${width}px` : "100%",
-        height: height ? `${height}px` : "100%",
-        overflow: "auto",
+        width: "100%",
+        height: "100%",
+        minHeight: height ? `${height}px` : "600px",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
       }}
     />
   );
