@@ -1,6 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from "react";
+import { css } from "@emotion/css";
 import { ErrorState, toErrorState } from "../types/error-types";
-import { logError } from "../utils/logger";
 
 interface Props {
   children: ReactNode;
@@ -12,12 +12,43 @@ interface State {
   error?: ErrorState;
 }
 
-/**
- * Error Boundary component
- *
- * Catches React errors and prevents the entire panel from crashing.
- * Displays error information and provides recovery options.
- */
+const errorContainerStyle = css`
+  padding: 16px;
+`;
+
+const errorBoxStyle = css`
+  border: 1px solid #f44336;
+  border-radius: 4px;
+  padding: 12px;
+  background-color: #ffebee;
+  color: #c62828;
+`;
+
+const errorTitleStyle = css`
+  margin: 0 0 8px 0;
+  font-size: 16px;
+`;
+
+const errorMessageStyle = css`
+  margin: 0 0 8px 0;
+  font-size: 14px;
+`;
+
+const errorDetailsStyle = css`
+  margin: 8px 0;
+  padding: 8px;
+  background-color: #fff;
+  font-size: 12px;
+  overflow: auto;
+  max-height: 200px;
+`;
+
+const errorHintStyle = css`
+  margin: 8px 0 0 0;
+  font-size: 13px;
+  font-style: italic;
+`;
+
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -34,57 +65,31 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    logError("ErrorBoundary", "Caught error in component tree", {
-      error: error.message,
+    console.error("ErrorBoundary caught error:", error.message, {
       stack: error.stack,
       componentStack: errorInfo.componentStack,
     });
 
-    const errorState = toErrorState(error);
-
-    if (this.props.onError) {
-      this.props.onError(errorState);
+    if (this.props.onError && this.state.error) {
+      this.props.onError(this.state.error);
     }
   }
 
   render() {
     if (this.state.hasError && this.state.error) {
       return (
-        <div style={{ padding: "16px" }}>
-          <div
-            style={{
-              border: "1px solid #f44336",
-              borderRadius: "4px",
-              padding: "12px",
-              backgroundColor: "#ffebee",
-              color: "#c62828",
-            }}
-          >
-            <h3 style={{ margin: "0 0 8px 0", fontSize: "16px" }}>Error</h3>
-            <p style={{ margin: "0 0 8px 0", fontSize: "14px" }}>
+        <div className={errorContainerStyle}>
+          <div className={errorBoxStyle}>
+            <h3 className={errorTitleStyle}>Error</h3>
+            <p className={errorMessageStyle}>
               {this.state.error.message}
             </p>
             {this.state.error.details && (
-              <pre
-                style={{
-                  margin: "8px 0",
-                  padding: "8px",
-                  backgroundColor: "#fff",
-                  fontSize: "12px",
-                  overflow: "auto",
-                  maxHeight: "200px",
-                }}
-              >
+              <pre className={errorDetailsStyle}>
                 {this.state.error.details}
               </pre>
             )}
-            <p
-              style={{
-                margin: "8px 0 0 0",
-                fontSize: "13px",
-                fontStyle: "italic",
-              }}
-            >
+            <p className={errorHintStyle}>
               {this.state.error.resolutionHint}
             </p>
           </div>

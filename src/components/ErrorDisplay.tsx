@@ -6,12 +6,6 @@ interface Props {
   error: ErrorState;
 }
 
-/**
- * Error Display component
- *
- * Displays error states using Grafana's Alert component.
- * Shows user-friendly messages with resolution hints.
- */
 export const ErrorDisplay: React.FC<Props> = ({ error }) => {
   const severity = ERROR_SEVERITY[error.type];
 

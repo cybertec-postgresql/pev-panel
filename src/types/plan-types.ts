@@ -1,53 +1,12 @@
-/**
- * PostgreSQL EXPLAIN JSON Type Definitions
- *
- * Complete TypeScript interfaces for PostgreSQL EXPLAIN (FORMAT JSON) output.
- * Covers PostgreSQL versions 10-16.
- *
- * @see https://www.postgresql.org/docs/current/using-explain.html
- */
-
-/**
- * Root execution plan returned by PostgreSQL EXPLAIN (FORMAT JSON)
- */
 export interface ExecutionPlan {
-  /** Root node of the execution plan tree */
   Plan: PlanNode;
-
-  /** Time spent planning the query (milliseconds) */
   "Planning Time"?: number;
-
-  /** Time spent executing the query (milliseconds, requires ANALYZE) */
   "Execution Time"?: number;
-
-  /** Trigger execution statistics (if any triggers were fired) */
   Triggers?: Trigger[];
-
-  /** JIT compilation information (PostgreSQL 11+) */
   JIT?: JITInfo;
 }
 
-/**
- * Individual node in the execution plan tree
- *
- * Represents a single operation (scan, join, sort, etc.) with cost estimates,
- * actual execution statistics (if ANALYZE), and optional child nodes.
- */
 export interface PlanNode {
-  // === Node Identification ===
-
-  /** Type of operation (Seq Scan, Index Scan, Hash Join, etc.) */
-  "Node Type": NodeType;
-
-  /** Relationship to parent node in plan tree */
-  "Parent Relationship"?: ParentRelationship;
-
-  // === Cost Estimates (always present) ===
-
-  /** Estimated startup cost (arbitrary units) */
-  "Startup Cost": number;
-
-  /** Estimated total cost including all child nodes (arbitrary units) */
   "Total Cost": number;
 
   /** Estimated number of rows this node will return */
