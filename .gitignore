@@ -42,3 +42,11 @@ coverage/
 *.tmp
 *.temp
 .cache/
+
+# Package artifacts
+*.zip
+*.tar.gz
+
+# Spec files
+specs/
+.specify/

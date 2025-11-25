@@ -1,0 +1,64 @@
+# NPM ignore patterns for publishing
+# These files are excluded from the npm package
+
+# Source files (only dist/ should be published)
+src/
+specs/
+tests/
+scripts/
+
+# Configuration files
+.config/
+.github/
+.vscode/
+.idea/
+.specify/
+
+# Build configuration
+webpack.config.ts
+tsconfig.json
+jest.config.js
+
+# Docker files
+docker-compose.yml
+Dockerfile*
+.dockerignore
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+
+# Documentation (except README in dist)
+*.md
+!dist/README.md
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Logs
+*.log
+logs/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+*.swp
+*.swo
+*~

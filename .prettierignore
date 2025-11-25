@@ -1,0 +1,25 @@
+# Prettier ignore patterns for Grafana plugin
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Testing
+coverage/
+
+# Logs
+*.log
+
+# Generated files
+*.tsbuildinfo
+
+# Package files
+*.zip

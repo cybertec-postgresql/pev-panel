@@ -21,3 +21,24 @@ pnpm-lock.yaml
 # OS
 .DS_Store
 Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Package artifacts
+*.zip
+*.tar.gz
+
+# Spec files
+specs/
+.specify/

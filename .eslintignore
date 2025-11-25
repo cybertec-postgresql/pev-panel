@@ -1,0 +1,38 @@
+# ESLint ignore patterns for Grafana plugin
+# Ignore build outputs and dependencies
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Testing
+coverage/
+.nyc_output/
+
+# Minified files
+*.min.js
+*.min.css
+
+# Package files
+*.zip
+*.tar.gz
+
+# Logs
+*.log
+logs/
+
+# Cache
+.cache/
+.eslintcache
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
