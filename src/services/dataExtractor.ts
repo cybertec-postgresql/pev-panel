@@ -58,3 +58,45 @@ export function extractPlanData(
   
   return String(rawValue);
 }
+
+export function extractQueryData(
+  data: DataFrame[],
+  fieldName: string,
+): string | null {
+  if (!data || data.length === 0) {
+    return null;
+  }
+
+  // Search across all DataFrames to find the query field
+  for (const frame of data) {
+    if (!frame.fields || frame.fields.length === 0) {
+      continue;
+    }
+
+    const queryField = frame.fields.find((field) => field.name === fieldName);
+
+    if (!queryField) {
+      continue;
+    }
+
+    const values = queryField.values;
+
+    if (!values || values.length === 0) {
+      continue;
+    }
+
+    const rawValue = values[0];
+
+    if (rawValue === null || rawValue === undefined) {
+      continue;
+    }
+
+    if (typeof rawValue === "string") {
+      return rawValue;
+    }
+
+    return String(rawValue);
+  }
+
+  return null;
+}

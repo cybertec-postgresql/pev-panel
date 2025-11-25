@@ -1,11 +1,13 @@
 export interface PanelOptions {
   planFieldName: string;
+  queryFieldName: string;
   forceJsonMode: boolean;
   fontSize: number;
 }
 
 export const DEFAULT_PANEL_OPTIONS: PanelOptions = {
   planFieldName: "plan",
+  queryFieldName: "query",
   forceJsonMode: false,
   fontSize: 14,
 };
@@ -30,6 +32,13 @@ export function validatePanelOptions(
     validated.planFieldName.trim() === ""
   ) {
     throw new Error("planFieldName must be a non-empty string");
+  }
+
+  if (
+    typeof validated.queryFieldName !== "string" ||
+    validated.queryFieldName.trim() === ""
+  ) {
+    throw new Error("queryFieldName must be a non-empty string");
   }
 
   if (typeof validated.forceJsonMode !== "boolean") {

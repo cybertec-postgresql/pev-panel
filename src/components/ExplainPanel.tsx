@@ -7,7 +7,7 @@ import {
   toErrorState,
   PlanError,
 } from "../types/error-types";
-import { extractPlanData } from "../services/dataExtractor";
+import { extractPlanData, extractQueryData } from "../services/dataExtractor";
 import { validatePlan } from "../services/planValidator";
 import { VueMount } from "./VueMount";
 import { ErrorBoundary } from "./ErrorBoundary";
@@ -21,7 +21,7 @@ export const ExplainPanel: React.FC<Props> = ({
   width,
   height,
 }) => {
-  let result: { type: "success"; plan: any } | { type: "error"; error: ErrorState };
+  let result: { type: "success"; plan: any; query: string | null } | { type: "error"; error: ErrorState };
 
   try {
     const planData = extractPlanData(data.series, options.planFieldName);
@@ -36,7 +36,8 @@ export const ExplainPanel: React.FC<Props> = ({
       result = { type: "error" as const, error: errorState };
     } else {
       const plan = validatePlan(planData);
-      result = { type: "success" as const, plan };
+      const query = extractQueryData(data.series, options.queryFieldName);
+      result = { type: "success" as const, plan, query };
     }
   } catch (error) {
     const errorState =
@@ -53,6 +54,7 @@ export const ExplainPanel: React.FC<Props> = ({
     <ErrorBoundary>
       <VueMount
         plan={result.plan}
+        query={result.query || ""}
         fontSize={options.fontSize}
         width={width}
         height={height}

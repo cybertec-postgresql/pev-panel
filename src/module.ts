@@ -16,6 +16,12 @@ export const plugin = new PanelPlugin<PanelOptions>(
       description: "Name of the DataFrame field containing EXPLAIN output",
       defaultValue: DEFAULT_PANEL_OPTIONS.planFieldName,
     })
+    .addTextInput({
+      path: "queryFieldName",
+      name: "Query Field Name",
+      description: "Name of the DataFrame field containing the SQL query text",
+      defaultValue: DEFAULT_PANEL_OPTIONS.queryFieldName,
+    })
     .addBooleanSwitch({
       path: "forceJsonMode",
       name: "Force JSON Mode",

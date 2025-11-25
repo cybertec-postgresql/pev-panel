@@ -8,6 +8,7 @@ import "../styles/pev2-overrides.css";
 
 interface Props {
   plan: ExecutionPlan;
+  query: string;
   fontSize?: number;
   width?: number;
   height?: number;
@@ -15,6 +16,7 @@ interface Props {
 
 export const VueMount: React.FC<Props> = ({
   plan,
+  query,
   fontSize = 14,
   width,
   height,
@@ -34,7 +36,7 @@ export const VueMount: React.FC<Props> = ({
       },
       setup() {
         const planSource = JSON.stringify(plan);
-        const planQuery = "";
+        const planQuery = query;
 
         return () =>
           h(Pev2Plan, {
@@ -66,7 +68,7 @@ export const VueMount: React.FC<Props> = ({
         vueAppRef.current = null;
       }
     };
-  }, [plan, fontSize, width, height]);
+  }, [plan, query, fontSize, width, height]);
 
   return (
     <div
