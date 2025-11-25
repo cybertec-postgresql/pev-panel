@@ -32,11 +32,5 @@ export const plugin = new PanelPlugin<PanelOptions>(
         max: PANEL_OPTIONS_CONSTRAINTS.MAX_FONT_SIZE,
         step: PANEL_OPTIONS_CONSTRAINTS.FONT_SIZE_STEP,
       },
-    })
-    .addBooleanSwitch({
-      path: "darkMode",
-      name: "Dark Mode",
-      description: "Force dark theme for visualization",
-      defaultValue: DEFAULT_PANEL_OPTIONS.darkMode,
     });
 });

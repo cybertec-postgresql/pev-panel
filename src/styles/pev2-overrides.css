@@ -1,40 +1,89 @@
 /**
  * PEV2 Override Styles
- * 
+ *
  * Ensures PEV2 visualization fills the Grafana panel height
  * and integrates properly with the panel container.
+ * 
+ * CRITICAL: Minimal overrides only - don't break PEV2's splitpanes layout!
  */
 
-/* Ensure PEV2 root container fills available space */
-.d-flex.flex-column.vh-100 {
-  height: 100% !important;
-  min-height: 100% !important;
-  max-height: 100% !important;
+/* Container scoping */
+.pev2-panel-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #fff;
+  position: relative;
 }
 
-/* Remove fixed viewport height that conflicts with Grafana panels */
-.vh-100 {
-  height: 100% !important;
+/* Ensure PEV2 root fills panel - NO !important on display/flex to avoid breaking splitpanes */
+.pev2-panel-container .d-flex.flex-column.vh-100 {
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
 }
 
-/* Ensure flex containers stretch to fill */
-.flex-column {
+/* Remove viewport height constraints */
+.pev2-panel-container .vh-100 {
+  height: 100%;
+}
+
+/* Allow flex containers to expand naturally */
+.pev2-panel-container .flex-column {
   flex: 1 1 auto;
 }
 
-/* Make sure the plan diagram container is scrollable */
-.plan-diagram-container {
+/* Plan diagram container should scroll if needed */
+.pev2-panel-container .plan-diagram-container {
   overflow: auto;
   flex: 1 1 auto;
 }
 
-/* Tabs should not take up too much space */
-.nav-tabs {
+/* Tabs styling */
+.pev2-panel-container .nav-tabs {
   flex-shrink: 0;
+  background-color: transparent;
 }
 
-/* Content area should expand to fill */
-.tab-content {
+.pev2-panel-container .nav-tabs .nav-link {
+  color: var(--text-link, #3274d9);
+  cursor: pointer;
+}
+
+.pev2-panel-container .nav-tabs .nav-link:hover {
+  color: var(--text-link-hover, #1f62c4);
+  text-decoration: underline;
+}
+
+.pev2-panel-container .nav-tabs .nav-link.active {
+  background-color: transparent;
+}
+
+/* Tab content should expand */
+.pev2-panel-container .tab-content {
   flex: 1 1 auto;
   overflow: auto;
+}
+
+/* Fix text wrapping in badges */
+.pev2-panel-container .badge,
+.pev2-panel-container span.badge {
+  white-space: nowrap;
+}
+
+/* Fix inline alert elements (timing values) */
+.pev2-panel-container span.alert {
+  display: inline-block;
+  margin-bottom: 0;
+}
+
+/* Inherit Grafana theme colors */
+.pev2-panel-container .bg-light,
+.pev2-panel-container .bg-white {
+  background-color: transparent !important;
+}
+
+.pev2-panel-container .card,
+.pev2-panel-container .card-body {
+  background-color: transparent;
 }

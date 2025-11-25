@@ -98,7 +98,6 @@ export const ExplainPanel: React.FC<Props> = ({
       <VueMount
         plan={result.plan}
         fontSize={options.fontSize}
-        darkMode={options.darkMode}
         width={width}
         height={height}
       />

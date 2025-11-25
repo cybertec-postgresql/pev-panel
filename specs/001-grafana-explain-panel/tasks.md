@@ -146,7 +146,7 @@
 - [x] T058 [US3] Apply darkMode to PEV2 component in VueMount.tsx (via Vue props or CSS class)
 - [x] T059 [US3] Create src/styles/pev2-overrides.css for theme-aware PEV2 styling
 - [x] T060 [US3] Import pev2-overrides.css in VueMount.tsx
-- [ ] T061 [US3] Use Grafana theme variables in pev2-overrides.css (--grafana-font-family, --grafana-text-primary)
+- [x] T061 [US3] Use Grafana theme variables in pev2-overrides.css (--grafana-font-family, --grafana-text-primary)
 - [x] T062 [US3] Verify options persist when dashboard is saved and reloaded
 
 **Checkpoint**: Panel options work - users can customize appearance and changes apply immediately
@@ -189,16 +189,16 @@
 - [ ] T075 [P] Add plugin screenshots to src/img/ directory
 - [x] T076 [P] Create provisioning/dashboards/explain-example.json with sample dashboard
 - [x] T077 Add example queries to explain-example.json (simple scan, join, aggregation, CTE)
-- [X] T078 Verify bundle size is under 2MB requirement (npm run build, check dist/module.js)
-- [ ] T079 Verify no external CDN references in bundle (inspect dist/module.js source)
+- [x] T078 Verify bundle size is under 2MB requirement (npm run build, check dist/module.js)
+- [x] T079 Verify no external CDN references in bundle (inspect dist/module.js source)
 - [x] T080 Test plugin in local Grafana instance following quickstart.md
 - [x] T081 Test plugin with PostgreSQL data source and real EXPLAIN queries
 - [x] T082 Test plugin with TestData data source using CSV and JSON scenarios
 - [ ] T083 Test error states: NO_DATA, FIELD_NOT_FOUND, INVALID_FORMAT, PARSE_ERROR
 - [ ] T084 Verify CSP compliance (test in Grafana Cloud or with strict CSP settings)
 - [ ] T085 Run linter: npm run lint and fix any issues
-- [X] T086 Run formatter: npm run format
-- [X] T087 Build production bundle: npm run build
+- [x] T086 Run formatter: npm run format
+- [x] T087 Build production bundle: npm run build
 - [ ] T088 Generate plugin signing manifest if needed: npm run sign
 - [ ] T089 Create distribution package: zip -r dist.zip dist/ or npm run package
 

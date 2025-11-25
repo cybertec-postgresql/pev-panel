@@ -52,21 +52,6 @@ export interface PanelOptions {
    * @maximum 24
    */
   fontSize: number;
-
-  /**
-   * Dark mode override
-   *
-   * When false, theme is detected from Grafana's theme settings.
-   * When true, forces dark theme regardless of Grafana theme.
-   *
-   * Use this when:
-   * - Grafana is in light theme but you prefer dark visualization
-   * - Presentation mode requires specific theme
-   * - Embedding in external dashboard with different theme
-   *
-   * @default false
-   */
-  darkMode: boolean;
 }
 
 /**
@@ -78,7 +63,6 @@ export const DEFAULT_PANEL_OPTIONS: PanelOptions = {
   planFieldName: "plan",
   forceJsonMode: false,
   fontSize: 14,
-  darkMode: false,
 };
 
 /**
@@ -139,11 +123,6 @@ export function validatePanelOptions(
         Math.round(validated.fontSize),
       ),
     );
-  }
-
-  // Validate darkMode
-  if (typeof validated.darkMode !== "boolean") {
-    validated.darkMode = DEFAULT_PANEL_OPTIONS.darkMode;
   }
 
   return validated;

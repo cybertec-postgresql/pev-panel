@@ -11,7 +11,8 @@ import { Plan as Pev2Plan } from "pev2";
 import { mountVueApp, unmountVueApp } from "../services/vueBootstrap";
 import { ExecutionPlan } from "../types/plan-types";
 import { logDebug } from "../utils/logger";
-import "bootstrap/dist/css/bootstrap.min.css";
+// Import scoped Bootstrap styles (only what PEV2 needs)
+import "../styles/bootstrap-scoped.css";
 import "pev2/dist/pev2.css";
 import "../styles/pev2-overrides.css";
 
@@ -20,7 +21,6 @@ const CONTEXT = "VueMount";
 interface Props {
   plan: ExecutionPlan;
   fontSize?: number;
-  darkMode?: boolean;
   width?: number;
   height?: number;
 }
@@ -34,7 +34,6 @@ interface Props {
 export const VueMount: React.FC<Props> = ({
   plan,
   fontSize = 14,
-  darkMode = false,
   width,
   height,
 }) => {
@@ -48,7 +47,6 @@ export const VueMount: React.FC<Props> = ({
 
     logDebug(CONTEXT, "Mounting PEV2 visualization", {
       fontSize,
-      darkMode,
       width,
       height,
     });
@@ -65,11 +63,12 @@ export const VueMount: React.FC<Props> = ({
           // Convert plan to JSON string format that PEV2 expects
           const planSource = JSON.stringify(plan, null, 2);
           const planQuery = "";
-          
-          return () => h(Pev2Plan, {
-            planSource: planSource,
-            planQuery: planQuery,
-          });
+
+          return () =>
+            h(Pev2Plan, {
+              planSource: planSource,
+              planQuery: planQuery,
+            });
         },
       });
 
@@ -85,19 +84,14 @@ export const VueMount: React.FC<Props> = ({
         containerRef.current.style.fontSize = `${fontSize}px`;
       }
 
-      // Apply dark mode styling
-      if (containerRef.current && darkMode) {
-        containerRef.current.classList.add("pev2-dark-mode");
-      } else if (containerRef.current) {
-        containerRef.current.classList.remove("pev2-dark-mode");
-      }
-
       // Ensure PEV2 fills the container height
       if (containerRef.current) {
-        const pev2Container = containerRef.current.querySelector('.d-flex') as HTMLElement;
+        const pev2Container = containerRef.current.querySelector(
+          ".d-flex",
+        ) as HTMLElement;
         if (pev2Container) {
-          pev2Container.style.height = '100%';
-          pev2Container.style.minHeight = '100%';
+          pev2Container.style.height = "100%";
+          pev2Container.style.minHeight = "100%";
         }
       }
     } catch (error) {
@@ -112,11 +106,12 @@ export const VueMount: React.FC<Props> = ({
         vueAppRef.current = null;
       }
     };
-  }, [plan, fontSize, darkMode, width, height]);
+  }, [plan, fontSize, width, height]);
 
   return (
     <div
       ref={containerRef}
+      className="pev2-panel-container"
       style={{
         width: "100%",
         height: "100%",
