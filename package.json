@@ -5,8 +5,8 @@
   "scripts": {
     "build": "node scripts/build.js",
     "dev": "webpack -w -c ./webpack.config.ts --env development",
-    "test": "jest --watch --onlyChanged",
-    "test:ci": "jest --passWithNoTests --maxWorkers 4",
+    "test": "jest --watch --onlyChanged --config .config/jest.config.js",
+    "test:ci": "jest --passWithNoTests --maxWorkers 4 --config .config/jest.config.js",
     "typecheck": "tsc --noEmit",
     "scope-bootstrap": "node scripts/scope-bootstrap.js",
     "lint": "eslint --config .config/eslint.config.mjs --cache .",
