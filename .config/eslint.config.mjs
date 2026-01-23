@@ -9,6 +9,24 @@ import { defineConfig } from 'eslint/config';
 import grafanaConfig from '@grafana/eslint-config/flat.js';
 
 export default defineConfig([
+  {
+    ignores: [
+      'node_modules/**',
+      'dist/**',
+      'build/**',
+      '*.tsbuildinfo',
+      'coverage/**',
+      '.nyc_output/**',
+      '**/*.min.js',
+      '**/*.min.css',
+      '*.zip',
+      '*.tar.gz',
+      '*.log',
+      'logs/**',
+      '.cache/**',
+      '.eslintcache',
+    ],
+  },
   ...grafanaConfig,
   {
     rules: {

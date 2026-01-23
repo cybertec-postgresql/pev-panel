@@ -9,6 +9,9 @@ dist/
 build/
 *.tsbuildinfo
 
+# Lint cache
+.eslintcache
+
 # IDE
 .vscode/*
 !.vscode/settings.json
