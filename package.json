@@ -38,7 +38,7 @@
     "@vue/compiler-sfc": "^3.4.0",
     "archiver": "^7.0.1",
     "bootstrap": "5.3.8",
-    "copy-webpack-plugin": "^11.0.0",
+    "copy-webpack-plugin": "^14.0.0",
     "css-loader": "^6.7.3",
     "eslint": "^9.0.0",
     "eslint-webpack-plugin": "^4.0.1",
