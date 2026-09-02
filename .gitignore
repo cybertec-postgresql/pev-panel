@@ -38,6 +38,9 @@ logs/
 coverage/
 .nyc_output/
 
+# Linting
+.eslintcache
+
 # Temporary files
 *.tmp
 *.temp
