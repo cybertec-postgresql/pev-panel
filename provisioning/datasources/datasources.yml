@@ -11,11 +11,11 @@ datasources:
     uid: postgres-testdb
     isDefault: true
     url: postgres:5432
-    database: testdb
     user: testuser
     secureJsonData:
       password: testpass
     jsonData:
+      database: testdb
       sslmode: disable
       postgresVersion: 1600
       timescaledb: false
