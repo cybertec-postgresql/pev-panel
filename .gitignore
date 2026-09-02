@@ -9,6 +9,9 @@ dist/
 build/
 *.tsbuildinfo
 
+# Lint cache
+.eslintcache
+
 # IDE
 .vscode/*
 !.vscode/settings.json
@@ -37,9 +40,6 @@ logs/
 # Testing
 coverage/
 .nyc_output/
-
-# Linting
-.eslintcache
 
 # Temporary files
 *.tmp

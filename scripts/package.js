@@ -55,8 +55,9 @@ archive.on('error', (err) => {
 // Pipe archive data to the file
 archive.pipe(output);
 
-// Add all files from dist directory
-archive.directory(DIST_DIR, false);
+// Add all files from dist directory inside a subdirectory named after the plugin ID
+// This is required by Grafana's plugin packaging format
+archive.directory(DIST_DIR, 'cybertec-pev-panel');
 
 // Finalize the archive
 archive.finalize();
